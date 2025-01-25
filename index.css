@@ -1,0 +1,53 @@
+body {
+  padding: 2em;
+  background-color: #921710;
+}
+
+#canvasBox {
+  margin: 2em;
+  display: block;
+  width: 400px;
+  height: 400px;
+  position: relative;
+  background-color: #6b0000;
+
+  & > img {
+    position: absolute;
+    transform: translate(-50%, -50%) scale(75%);
+
+    &.flip {
+      transform: translate(-50%, -50%) scale(75%) rotate(90deg);
+    }
+  }
+}
+
+#cladding {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--size, 5), 1fr);
+  grid-template-rows: repeat(var(--size, 5), 1fr);
+  border: solid thick black;
+  border-radius: 0.5em;
+  z-index: 1;
+
+  & > div {
+    background-color: black;
+    position: relative;
+
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      inset: 0;
+      background-color: #c28550;
+      border: solid thin black;
+      border-radius: 0.5em;
+    }
+
+    &.hidden {
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+  }
+}
