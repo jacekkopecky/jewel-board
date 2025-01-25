@@ -6,36 +6,37 @@ you get one uncover per day
 
 ## todo
 
-- [ ] add a "tree" (box for now) or gray and dim jewels
-- [ ] load state from localStorage:
-  - how many tiles we have
-  - add to the above how many days it's been since started minus days seen
-  - update days seen to how many days it's been since started
-  - save in localStorage
-  - storage also contains:
-    - puzzle number we're on (number guiding puzzle selection)
-    - jewel placement
-    - flipped tiles
-  - initial animation: flip flipped tiles in order, quickly
-  - move uncovered jewels to tree
-- [ ] or initialize it:
+- [x] add a "tree" (box for now) or gray and dim jewels
+- [x] load state from localStorage:
+  - [x] how many tiles to open we have
+  - [x] add to the above how many days it's been since started minus days seen
+  - [x] update days seen to how many days it's been since started
+  - [x] save in localStorage
+  - [x] storage also contains:
+    - [x] puzzle number we're on (number guiding puzzle selection)
+    - [x] jewel placement
+    - [x] flipped tiles
+- [x] or initialize it:
   - 100 tiles to open
   - 0 days seen
-  - date started today (past midnight)
+  - date started today (last midnight)
   - we're on puzzle 0
   - newPuzzle()
-- [ ] newPuzzle()
+  - remember placement in localStorage
+  - increase puzzle in localStorage
+- [x] newPuzzle()
   - empty flipped tiles
   - choose puzzle template with puzzleCount % templates.length
   - template says size and areas of jewels to select, e.g. 4; 2,2,3,4
+- [x] initial animation: flip flipped tiles in order, quickly
+- [x] move uncovered jewels to tree
+- [x] show a state
   - replace cladding
   - place jewels on board
-  - remember placement in localStorage
-  - increase puzzle in localStorage
-- [ ] on click
+- [x] on click
   - remove 1 from tiles to open, save
   - flip tile, add it to flipped tiles, save
-  - if all jewels are fully uncovered, newPuzzle
+- [ ] if all jewels are fully uncovered, newPuzzle
 - [ ] tree of jewels so you know what to look for
   - hang jewels on a tree but in grey and dim, remember the tree in localStorage
   - move jewels from board to tree when fully uncovered

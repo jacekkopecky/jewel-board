@@ -2,7 +2,13 @@ import { Jewel } from './jewels.js';
 
 export let tryPlacingCount = 0;
 
-type Pos = [x: number, y: number];
+export type Pos = [x: number, y: number];
+
+export interface JewelPlaced {
+  jewel: Jewel;
+  position: Pos;
+  flip: boolean;
+}
 
 export class Board {
   size = 0;
@@ -33,7 +39,7 @@ export class Board {
     }
   }
 
-  withJewel(jewel: Jewel, position: Pos, flip = false) {
+  withJewel(jewel: Pick<Jewel, 'w' | 'h'>, position: Pos, flip = false) {
     const newBoard = new Board(this);
     let { w, h } = jewel;
     const [xp, yp] = position;
@@ -46,7 +52,7 @@ export class Board {
     return newBoard;
   }
 
-  canPlace(jewel: Jewel, position: Pos) {
+  canPlace(jewel: Pick<Jewel, 'w' | 'h'>, position: Pos) {
     const [xp, yp] = position;
     const { w, h } = jewel;
     for (let x = 0; x < w; x += 1) {
@@ -74,7 +80,7 @@ export class Board {
     return positions;
   }
 
-  tryPlacing(jewels: Jewel[]): { jewel: Jewel; position: Pos; flip: boolean }[] | undefined {
+  tryPlacing(jewels: Jewel[]): JewelPlaced[] | undefined {
     tryPlacingCount += 1;
     const [jewel, ...rest] = jewels;
     if (!jewel) return []; // all placed

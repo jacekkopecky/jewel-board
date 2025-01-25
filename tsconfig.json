@@ -8,6 +8,7 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "moduleResolution": "nodenext",
+    "sourceMap": true,
     "outDir": "build"
   }
 }

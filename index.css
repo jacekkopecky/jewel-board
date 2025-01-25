@@ -13,11 +13,18 @@ body {
 }
 
 img.jewel {
+  --scale: scale(75%);
+  --translate: translate(-50%, -50%);
   position: absolute;
-  transform: translate(-50%, -50%) scale(75%);
+  transform: var(--translate) var(--scale);
 
   &.flip {
-    transform: translate(-50%, -50%) scale(75%) rotate(90deg);
+    transform: var(--translate) var(--scale) rotate(90deg);
+  }
+
+  &.uncovered {
+    --scale: scale(0);
+    transition: transform 1s;
   }
 }
 
@@ -40,7 +47,12 @@ img.jewel {
 }
 
 .jewel.shadow {
-  filter: grayscale(100%);
+  filter: grayscale(100%) contrast(0.05);
+
+  &.uncovered {
+    filter: none;
+    transition: filter 1s ease-in;
+  }
 }
 
 #cladding {
@@ -69,7 +81,7 @@ img.jewel {
 
     &.hidden {
       opacity: 0;
-      transition: opacity 0.5s;
+      transition: opacity 1s;
     }
   }
 }

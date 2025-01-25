@@ -5,3 +5,7 @@ export function selectRandom<T>(arr: T[]): T {
 export function percent(num: number) {
   return `${(num * 100).toFixed(3)}%`;
 }
+
+export function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
