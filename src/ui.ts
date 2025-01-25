@@ -9,6 +9,7 @@ export class UI {
   private readonly jewelsEl = document.querySelector<HTMLElement>('#jewels')!;
   private readonly treeEl = document.querySelector<HTMLElement>('#tree')!;
   private readonly claddingEl = document.querySelector<HTMLElement>('#cladding')!;
+  private readonly movesCountEl = document.querySelector<HTMLElement>('#movesCount')!;
 
   private claddingTiles: HTMLElement[] = [];
 
@@ -17,7 +18,8 @@ export class UI {
       this.canvasBoxEl == null ||
       this.jewelsEl == null ||
       this.treeEl == null ||
-      this.claddingEl == null
+      this.claddingEl == null ||
+      this.movesCountEl == null
     ) {
       throw new Error('cannot find expected HTML elements');
     }
@@ -27,23 +29,26 @@ export class UI {
     const ui = new UI(state);
 
     ui.reset();
+    ui.doShow();
+  }
 
-    const size = state.size;
-    ui.canvasBoxEl.style.setProperty('--size', String(size));
+  private async doShow() {
+    const size = this.state.size;
+    this.canvasBoxEl.style.setProperty('--size', String(size));
 
     // put cladding in
     for (let y = 0; y < size; y += 1) {
       for (let x = 0; x < size; x += 1) {
         const tileEl = document.createElement('div');
-        tileEl.addEventListener('click', () => ui.uncoverTile(x, y));
-        ui.claddingEl.append(tileEl);
+        tileEl.addEventListener('click', () => this.uncoverTile(x, y));
+        this.claddingEl.append(tileEl);
 
-        ui.claddingTiles.push(tileEl);
+        this.claddingTiles.push(tileEl);
       }
     }
 
     // put jewels in
-    for (const { jewel, position, flip } of state.jewelsPlaced) {
+    for (const { jewel, position, flip } of this.state.jewelsPlaced) {
       let { w, h, svg } = jewel;
       const [x, y] = position;
       const [wf, hf] = flip ? [h, w] : [w, h];
@@ -56,25 +61,31 @@ export class UI {
       if (flip) img.classList.add('flip');
       img.style.width = percent(w / size);
       img.style.height = percent(h / size);
-      ui.jewelsEl.append(img);
+      this.jewelsEl.append(img);
 
       const shadow = img.cloneNode(true) as typeof img;
       shadow.classList.add('shadow');
-      ui.treeEl.append(shadow);
+      this.treeEl.append(shadow);
 
       jewel.el = img;
       jewel.shadowEl = shadow;
     }
 
-    console.log(ui);
+    this.viewMoveCount();
 
-    if (state.uncoveredTiles.length > 0) {
+    if (this.state.uncoveredTiles.length > 0) {
       await delay(200);
     }
-    for (const [x, y] of state.uncoveredTiles) {
+    for (const [x, y] of this.state.uncoveredTiles) {
       await delay(100);
-      ui.uncoverTile(x, y, true);
+      this.uncoverTile(x, y, true);
     }
+  }
+
+  private viewMoveCount() {
+    const moves = this.state.moves;
+    this.movesCountEl.textContent = moves ? String(this.state.moves) : 'play more tomorrow';
+    this.movesCountEl.classList.toggle('tomorrow', !moves);
   }
 
   private reset() {
@@ -85,8 +96,8 @@ export class UI {
   }
 
   private uncoverTile(x: number, y: number, replaying = false) {
-    if (this.state.moves <= 0) {
-      return; // todo show out of moves, wait until tomorrow
+    if (this.state.moves <= 0 && !replaying) {
+      return;
     }
 
     const index = x + y * this.state.size;
@@ -103,9 +114,8 @@ export class UI {
     }
 
     this.checkFullyUncoveredJewels();
+    this.viewMoveCount();
     // todo also let the user play a new puzzle if all jewels uncovered
-
-    // todo show moves
   }
 
   private checkFullyUncoveredJewels() {

@@ -43,5 +43,6 @@ you get one uncover per day
 
 ## maybes
 
+- [ ] clicking with 0 moves could show how long until next move is available
 - [ ] select one type of jewel from a bag of the same size so the shape is unambiguous
 - [ ] handle the case when the selected jewels cannot be placed

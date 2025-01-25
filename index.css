@@ -1,31 +1,13 @@
 body {
   padding: 2em;
   background-color: #921710;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-#canvasBox {
-  margin: 2em;
-  display: block;
-  width: 400px;
-  height: 400px;
-  position: relative;
-  background-color: #6b0000;
-}
-
-img.jewel {
-  --scale: scale(75%);
-  --translate: translate(-50%, -50%);
-  position: absolute;
-  transform: var(--translate) var(--scale);
-
-  &.flip {
-    transform: var(--translate) var(--scale) rotate(90deg);
-  }
-
-  &.uncovered {
-    --scale: scale(0);
-    transition: transform 1s;
-  }
+h1 {
+  margin: 0;
 }
 
 #tree {
@@ -43,6 +25,86 @@ img.jewel {
     &.flip {
       transform: rotate(90deg);
     }
+  }
+}
+
+#movesBox {
+  width: 400px;
+  display: flex;
+  justify-content: stretch;
+  background: black;
+
+  &::before {
+    content: '';
+    flex-grow: 1;
+    border-bottom-right-radius: 1em;
+    background-color: #921710;
+  }
+  &::after {
+    content: '';
+    flex-grow: 1;
+    border-bottom-left-radius: 1em;
+    background-color: #921710;
+  }
+
+  & > div {
+    background-color: #921710;
+    position: relative;
+    font-family: sans-serif;
+    display: flex;
+    align-items: end;
+
+    & > span {
+      display: block;
+      background-color: #c28550;
+      color: #921710;
+      padding: 0 2rem;
+      margin: 0.3rem 0.3rem 0;
+      border-radius: 1rem;
+      z-index: 1;
+      font-size: 250%;
+      line-height: 1em;
+      font-weight: bold;
+
+      &.tomorrow {
+        font-size: 125%;
+        line-height: 2em;
+        font-weight: normal;
+      }
+    }
+
+    &::before {
+      content: '';
+      background-color: black;
+      position: absolute;
+      inset: 0;
+      border-radius: 1em 1em 0 0;
+    }
+  }
+}
+
+#canvasBox {
+  display: block;
+  width: 400px;
+  height: 400px;
+  position: relative;
+  background-color: #6b0000;
+  border-radius: 0.5em;
+}
+
+img.jewel {
+  --scale: scale(75%);
+  --translate: translate(-50%, -50%);
+  position: absolute;
+  transform: var(--translate) var(--scale);
+
+  &.flip {
+    transform: var(--translate) var(--scale) rotate(90deg);
+  }
+
+  &.uncovered {
+    --scale: scale(0);
+    transition: transform 1s;
   }
 }
 
