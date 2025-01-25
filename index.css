@@ -93,7 +93,7 @@ h1 {
 }
 
 img.jewel {
-  --scale: scale(75%);
+  --scale: scale(90%);
   --translate: translate(-50%, -50%);
   position: absolute;
   transform: var(--translate) var(--scale);
