@@ -49,7 +49,7 @@ describe('jewel-board', () => {
 
   it('should clone with withJewel()', () => {
     const board = new Board(5);
-    const newBoard = board.withJewel([2, 1], [1, 3]);
+    const newBoard = board.withJewel({ w: 2, h: 1 }, [1, 3]);
 
     assert.notEqual(board, newBoard);
 
@@ -76,25 +76,25 @@ describe('jewel-board', () => {
 
   it('should check canPlace correctly', () => {
     const board = new Board(5);
-    const newBoard = board.withJewel([2, 1], [1, 3]);
+    const newBoard = board.withJewel({ w: 2, h: 1 }, [1, 3]);
 
-    assert.equal(board.canPlace([1, 3], [0, 0]), true);
-    assert.equal(board.canPlace([1, 3], [1, 0]), true);
-    assert.equal(board.canPlace([1, 3], [1, 1]), true);
-    assert.equal(board.canPlace([1, 3], [3, 2]), true);
-    assert.equal(board.canPlace([1, 3], [4, 0]), true);
-    assert.equal(board.canPlace([1, 3], [5, 0]), false);
-    assert.equal(board.canPlace([1, 3], [1, 2]), true);
-    assert.equal(board.canPlace([1, 3], [1, 3]), false);
+    assert.equal(board.canPlace({ w: 1, h: 3 }, [0, 0]), true);
+    assert.equal(board.canPlace({ w: 1, h: 3 }, [1, 0]), true);
+    assert.equal(board.canPlace({ w: 1, h: 3 }, [1, 1]), true);
+    assert.equal(board.canPlace({ w: 1, h: 3 }, [3, 2]), true);
+    assert.equal(board.canPlace({ w: 1, h: 3 }, [4, 0]), true);
+    assert.equal(board.canPlace({ w: 1, h: 3 }, [5, 0]), false);
+    assert.equal(board.canPlace({ w: 1, h: 3 }, [1, 2]), true);
+    assert.equal(board.canPlace({ w: 1, h: 3 }, [1, 3]), false);
 
-    assert.equal(newBoard.canPlace([1, 3], [0, 0]), true);
-    assert.equal(newBoard.canPlace([1, 3], [1, 0]), true);
-    assert.equal(newBoard.canPlace([1, 3], [2, 2]), false);
-    assert.equal(newBoard.canPlace([1, 3], [3, 2]), true);
+    assert.equal(newBoard.canPlace({ w: 1, h: 3 }, [0, 0]), true);
+    assert.equal(newBoard.canPlace({ w: 1, h: 3 }, [1, 0]), true);
+    assert.equal(newBoard.canPlace({ w: 1, h: 3 }, [2, 2]), false);
+    assert.equal(newBoard.canPlace({ w: 1, h: 3 }, [3, 2]), true);
   });
 });
 
-function trim(str) {
+function trim(str: string) {
   return str
     .split('\n')
     .map((s) => s.trim())
