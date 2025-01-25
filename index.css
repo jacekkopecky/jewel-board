@@ -10,15 +10,37 @@ body {
   height: 400px;
   position: relative;
   background-color: #6b0000;
+}
 
-  & > img {
-    position: absolute;
-    transform: translate(-50%, -50%) scale(75%);
+img.jewel {
+  position: absolute;
+  transform: translate(-50%, -50%) scale(75%);
 
+  &.flip {
+    transform: translate(-50%, -50%) scale(75%) rotate(90deg);
+  }
+}
+
+#tree {
+  width: 400px;
+  height: 200px;
+  margin: 2em;
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  & > .jewel {
+    position: static;
+    display: inline-block;
+    transform: none;
     &.flip {
-      transform: translate(-50%, -50%) scale(75%) rotate(90deg);
+      transform: rotate(90deg);
     }
   }
+}
+
+.jewel.shadow {
+  filter: grayscale(100%);
 }
 
 #cladding {

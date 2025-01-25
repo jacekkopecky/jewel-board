@@ -3,6 +3,8 @@ import { jewels } from './jewels.js';
 import { percent, selectRandom } from './lib.js';
 
 const canvasBoxEl = document.querySelector<HTMLElement>('#canvasBox')!;
+const jewelsEl = document.querySelector<HTMLElement>('#jewels')!;
+const treeEl = document.querySelector<HTMLElement>('#tree')!;
 const claddingEl = document.querySelector<HTMLElement>('#cladding')!;
 
 const size = 4;
@@ -24,12 +26,20 @@ for (const pos of positions) {
   const [wf, hf] = flip ? [h, w] : [w, h];
   const img = document.createElement('img');
   if (svg) img.src = svg;
+  img.classList.add('jewel');
   img.style.top = percent((y + hf / 2) / size);
   img.style.left = percent((x + wf / 2) / size);
   if (flip) img.classList.add('flip');
   img.style.width = percent(w / size);
   img.style.height = percent(h / size);
-  canvasBoxEl.append(img);
+  jewelsEl.append(img);
+
+  const shadow = img.cloneNode(true) as typeof img;
+  shadow.classList.add('shadow');
+  treeEl.append(shadow);
+
+  jewel.el = img;
+  jewel.shadowEl = shadow;
 }
 
 // @ts-ignore
