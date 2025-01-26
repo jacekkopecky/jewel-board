@@ -5,7 +5,7 @@ import { templates } from './templates.js';
 const LOCAL_STORAGE_KEY = 'jewel-board';
 
 export class State {
-  private _moves = 15;
+  private _moves = 16;
   private timeStarted = new Date().setHours(0, 0, 0, 0);
   private daysSeen = 0;
 
