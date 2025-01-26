@@ -19,9 +19,10 @@ export const jewels: Jewel[] = [
   { w: 2, h: 3, svg: 'svgs/2x3-purple.svg' },
 ];
 
-export function selectJewels(areaSizes: number[]) {
+export function selectJewels(areaSizes: number[]): Jewel[] {
   return areaSizes.map((size) => {
     const jewelsOfSize = jewels.filter((j) => j.w * j.h === size);
-    return selectRandom(jewelsOfSize);
+    // clone it so we can set el and shadow el for it
+    return { ...selectRandom(jewelsOfSize) };
   });
 }
