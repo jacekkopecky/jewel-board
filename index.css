@@ -8,7 +8,8 @@ html {
 }
 
 body {
-  padding: 2em;
+  margin: 0;
+  padding: 1em;
   background-color: var(--bg);
   background: radial-gradient(#ff3020, var(--bg));
   display: flex;
@@ -29,7 +30,7 @@ h1 {
 #tree {
   width: 400px;
   max-height: 400px;
-  margin: 2em;
+  margin: 1em;
   flex: 1 1 100%;
   display: flex;
   align-items: center;
