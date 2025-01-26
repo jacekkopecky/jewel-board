@@ -59,7 +59,6 @@ export class State {
 
   private newPuzzle() {
     this.puzzleNumber += 1;
-    console.log('making new puzzle', this.puzzleNumber);
 
     const template = templates[this.puzzleNumber % templates.length]!;
     this._size = template.size;
@@ -87,7 +86,6 @@ export class State {
   }
 
   private save(): void {
-    console.log('saving', this);
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(this));
   }
 }

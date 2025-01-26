@@ -2,7 +2,6 @@ import { delay, percent } from './lib.js';
 import { State } from './state.js';
 
 const CLASS_UNCOVERED = 'uncovered';
-const CLASS_HIDDEN = 'hidden';
 
 export class UI {
   private readonly canvasBoxEl = document.querySelector<HTMLElement>('#canvasBox')!;
@@ -28,11 +27,12 @@ export class UI {
   static async show(state: State) {
     const ui = new UI(state);
 
-    ui.reset();
     ui.doShow();
   }
 
   private async doShow() {
+    this.reset();
+
     const size = this.state.size;
     this.canvasBoxEl.style.setProperty('--size', String(size));
 
@@ -106,9 +106,9 @@ export class UI {
       throw new Error(`cannot find tile ${x},${y}`);
     }
 
-    if (tileEl.classList.contains(CLASS_HIDDEN)) return; // already uncovered
+    if (tileEl.classList.contains(CLASS_UNCOVERED)) return; // already uncovered
 
-    tileEl?.classList.add(CLASS_HIDDEN);
+    tileEl?.classList.add(CLASS_UNCOVERED);
     if (!replaying) {
       this.state.addFlippedTile(x, y);
     }
@@ -136,7 +136,7 @@ export class UI {
     for (let x = px; x < px + w; x += 1) {
       for (let y = py; y < py + h; y += 1) {
         const tileEl = this.claddingTiles[y * this.state.size + x];
-        if (!tileEl?.classList.contains(CLASS_HIDDEN)) return false;
+        if (!tileEl?.classList.contains(CLASS_UNCOVERED)) return false;
       }
     }
     return true;

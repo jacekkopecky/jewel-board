@@ -141,7 +141,7 @@ img.jewel {
       border-radius: 0.5em;
     }
 
-    &.hidden {
+    &.uncovered {
       opacity: 0;
       transition: opacity 1s;
     }

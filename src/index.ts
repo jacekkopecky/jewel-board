@@ -6,7 +6,6 @@ import { UI } from './ui.js';
 
 window.addEventListener('load', () => {
   const state = State.load();
-  console.log(state);
 
   UI.show(state);
 });
