@@ -43,12 +43,16 @@ export class Tree {
 
     // then the jewels
     for (const { jewel, flip, el, x, y } of this.jewels) {
+      const { w, h } = scaleJewel(jewel, this.jewels.length);
+
       setAttr(el, 'x', x);
       setAttr(el, 'y', y);
+      setAttr(el, 'width', w);
+      setAttr(el, 'height', h);
       setAttr(
         el,
         'transform',
-        `${flip ? `rotate(90 ${x} ${y})` : ''} translate(${-jewel.w / 2}, ${-jewel.h / 2})`
+        `${flip ? `rotate(90 ${x} ${y})` : ''} translate(${-w / 2}, ${-h / 2})`
       );
 
       this.treeSvgEl.append(el);
@@ -58,8 +62,6 @@ export class Tree {
   addJewel(jewel: Jewel, flip: boolean) {
     const jewelEl = svg('image', {
       href: jewel.svg,
-      width: jewel.w,
-      height: jewel.h,
     });
 
     jewelEl.classList.add('jewel', 'shadow');
@@ -151,4 +153,10 @@ function positionJewels(jewels: JewelPlaced[]) {
     jewels[next]!.angle = a;
     next += 1;
   }
+}
+
+// make jewels smaller if there's more of them
+function scaleJewel(j: Jewel, num: number) {
+  const scale = 0.95 ** (Math.max(num, 4) - 4);
+  return { w: j.w * scale, h: j.h * scale };
 }
