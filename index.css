@@ -14,8 +14,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-height: 100vh;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100svh;
   box-sizing: border-box;
 }
 
