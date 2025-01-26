@@ -41,7 +41,7 @@ you get one uncover per day
 - [x] tree of jewels so you know what to look for
   - hang jewels on a tree but in grey and dim, remember the tree in localStorage
   - move jewels from board to tree when fully uncovered
-  - [ ] fix moves indicator background
+  - [x] fix moves indicator background
   - [ ] give branches an outline, maybe little off-shoots?
 
 ## maybes

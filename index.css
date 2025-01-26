@@ -34,13 +34,15 @@ h1 {
   display: flex;
   align-items: center;
   position: relative;
+  border: solid 0.35em var(--darkBg);
+  border-radius: 0.75em;
+  overflow: hidden;
 
   & > svg {
     position: absolute;
     inset: 0;
     height: 100%;
     width: 100%;
-    border-radius: 1em;
     background: radial-gradient(
       ellipse 200% 150% at 50% 150%,
       #0f0,
@@ -67,24 +69,25 @@ h1 {
   width: 400px;
   flex-shrink: 0;
   display: flex;
-  justify-content: stretch;
-  background: black;
+  justify-content: center;
 
   &::before {
     content: '';
-    flex-grow: 1;
-    border-bottom-right-radius: 1em;
-    background-color: var(--bg);
+    background: transparent;
+    width: 1em;
+    border-bottom-right-radius: 0.5em;
+    box-shadow: 0 1em 0 0 var(--darkBg);
   }
+
   &::after {
     content: '';
-    flex-grow: 1;
-    border-bottom-left-radius: 1em;
-    background-color: var(--bg);
+    background: transparent;
+    width: 1em;
+    border-bottom-left-radius: 0.5em;
+    box-shadow: 0 1em 0 0 var(--darkBg);
   }
 
   & > div {
-    background-color: var(--bg);
     position: relative;
     font-family: sans-serif;
     display: flex;
@@ -95,8 +98,8 @@ h1 {
       background-color: var(--lightBg);
       color: var(--bg);
       padding: 0 2rem;
-      margin: 0.3rem 0.3rem 0;
-      border-radius: 1rem;
+      margin: 0.25rem 0.25rem 0;
+      border-radius: 0.5rem;
       z-index: 1;
       font-size: 250%;
       line-height: 1em;
@@ -111,10 +114,10 @@ h1 {
 
     &::before {
       content: '';
-      background-color: black;
+      background-color: var(--darkBg);
       position: absolute;
       inset: 0;
-      border-radius: 1em 1em 0 0;
+      border-radius: 0.75em 0.75em 0 0;
     }
   }
 }
@@ -126,8 +129,8 @@ h1 {
   flex-shrink: 0;
   position: relative;
   background-color: var(--darkBg);
-  border: solid thick black;
-  border-radius: 0.5em;
+  border: solid 0.25em var(--darkBg);
+  border-radius: 0.75em;
 }
 
 img.jewel {
@@ -165,7 +168,7 @@ img.jewel {
   z-index: 1;
 
   & > div {
-    background-color: black;
+    background-color: var(--darkBg);
     position: relative;
 
     &::after {
@@ -174,7 +177,7 @@ img.jewel {
       position: absolute;
       inset: 0;
       background-color: var(--lightBg);
-      border: solid thin black;
+      border: solid 0.1em var(--darkBg);
       border-radius: 0.5em;
     }
 
