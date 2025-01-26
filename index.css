@@ -57,7 +57,7 @@ h1 {
 
       &.uncovered {
         filter: none;
-        transition: filter 1s ease-in;
+        transition: filter 1s 1s ease-in;
       }
     }
 
@@ -160,7 +160,7 @@ img.jewel {
 
   &.uncovered {
     --scale: scale(0);
-    transition: transform 1s;
+    transition: transform 1s 1s;
   }
 }
 
@@ -176,6 +176,7 @@ img.jewel {
   & > div {
     background-color: var(--darkBg);
     position: relative;
+    transition: opacity 1s;
 
     &::after {
       content: '';
@@ -189,7 +190,6 @@ img.jewel {
 
     &.uncovered {
       opacity: 0;
-      transition: opacity 1s;
     }
   }
 }

@@ -101,11 +101,17 @@ export class UI {
         for (const tile of this.claddingTiles) {
             tile.classList.add(CLASS_UNCOVERED);
         }
-        await delay(3000);
-        // todo let the jewels fall off the tree into my score
-        this.state.newPuzzle();
+        await delay(2000);
+        for (const tile of this.claddingTiles) {
+            tile.classList.remove(CLASS_UNCOVERED);
+            await delay(5000 / this.claddingTiles.length);
+        }
         // extra move to get started with the next game
         this.state.addBonusMoves(1);
+        this.viewMoveCount();
+        await delay(1000);
+        // todo let the jewels fall off the tree into my score
+        this.state.newPuzzle();
         // reset view
         this.doShow();
     }
