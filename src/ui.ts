@@ -31,25 +31,15 @@ export class UI {
   }
 
   private async doShow() {
-    this.reset();
-
     const size = this.state.size;
-    this.canvasBoxEl.style.setProperty('--size', String(size));
 
-    // put cladding in
-    for (let y = 0; y < size; y += 1) {
-      for (let x = 0; x < size; x += 1) {
-        const tileEl = document.createElement('div');
-        tileEl.addEventListener('click', () => this.uncoverTile(x, y));
-        this.claddingEl.append(tileEl);
-
-        this.claddingTiles.push(tileEl);
-      }
-    }
+    this.generateCladding();
 
     this.tree.reset();
 
     // put jewels in
+    this.jewelsEl.textContent = '';
+
     for (const { jewel, position, flip } of this.state.jewelsPlaced) {
       let { w, h, svg } = jewel;
       const [x, y] = position;
@@ -83,17 +73,28 @@ export class UI {
     }
   }
 
+  private generateCladding() {
+    const size = this.state.size;
+    this.canvasBoxEl.style.setProperty('--size', String(size));
+    this.claddingEl.textContent = '';
+    this.claddingTiles.length = 0;
+
+    for (let y = 0; y < size; y += 1) {
+      for (let x = 0; x < size; x += 1) {
+        const tileEl = document.createElement('div');
+        tileEl.addEventListener('click', () => this.uncoverTile(x, y));
+        this.claddingEl.append(tileEl);
+
+        this.claddingTiles.push(tileEl);
+      }
+    }
+  }
+
   private viewMoveCount(allUncovered = false) {
     const moves = this.state.moves;
     const showTomorrow = !moves && !allUncovered;
     this.movesCountEl.textContent = showTomorrow ? 'play more tomorrow' : String(this.state.moves);
     this.movesCountEl.classList.toggle('tomorrow', showTomorrow);
-  }
-
-  private reset() {
-    this.claddingEl.textContent = '';
-    this.jewelsEl.textContent = '';
-    this.claddingTiles.length = 0;
   }
 
   private uncoverTile(x: number, y: number, replaying = false) {
@@ -127,18 +128,26 @@ export class UI {
     }
 
     await delay(2000);
+
+    this.state.newPuzzle();
+    this.generateCladding();
+    // hide all tiles again so we can slowly uncover them in a moment
     for (const tile of this.claddingTiles) {
-      tile.classList.remove(CLASS_UNCOVERED);
-      await delay(5000 / this.claddingTiles.length);
+      tile.classList.add(CLASS_UNCOVERED);
     }
+
+    for (const tile of this.claddingTiles) {
+      await delay(5000 / this.claddingTiles.length);
+      tile.classList.remove(CLASS_UNCOVERED);
+    }
+
+    await delay(5000 / this.claddingTiles.length);
+
     // extra move to get started with the next game
     this.state.addBonusMoves(1);
     this.viewMoveCount();
 
-    await delay(1000);
-
     // todo let the jewels fall off the tree into my score
-    this.state.newPuzzle();
 
     // reset view
     this.doShow();
