@@ -1,22 +1,22 @@
 import { delay, percent } from './lib.js';
 import { State } from './state.js';
+import { Tree } from './tree.js';
 
 const CLASS_UNCOVERED = 'uncovered';
 
 export class UI {
   private readonly canvasBoxEl = document.querySelector<HTMLElement>('#canvasBox')!;
   private readonly jewelsEl = document.querySelector<HTMLElement>('#jewels')!;
-  private readonly treeEl = document.querySelector<HTMLElement>('#tree')!;
   private readonly claddingEl = document.querySelector<HTMLElement>('#cladding')!;
   private readonly movesCountEl = document.querySelector<HTMLElement>('#movesCount')!;
 
   private claddingTiles: HTMLElement[] = [];
+  private tree = new Tree();
 
   constructor(private state: State) {
     if (
       this.canvasBoxEl == null ||
       this.jewelsEl == null ||
-      this.treeEl == null ||
       this.claddingEl == null ||
       this.movesCountEl == null
     ) {
@@ -47,6 +47,8 @@ export class UI {
       }
     }
 
+    this.tree.reset();
+
     // put jewels in
     for (const { jewel, position, flip } of this.state.jewelsPlaced) {
       let { w, h, svg } = jewel;
@@ -63,14 +65,13 @@ export class UI {
       img.style.height = percent(h / size);
       this.jewelsEl.append(img);
 
-      const shadow = img.cloneNode(true) as typeof img;
-      shadow.classList.add('shadow');
-      this.treeEl.append(shadow);
+      const shadow = this.tree.addJewel(jewel, flip);
 
       jewel.el = img;
       jewel.shadowEl = shadow;
     }
 
+    this.tree.show();
     this.viewMoveCount();
 
     if (this.state.uncoveredTiles.length > 0) {
@@ -92,7 +93,6 @@ export class UI {
   private reset() {
     this.claddingEl.textContent = '';
     this.jewelsEl.textContent = '';
-    this.treeEl.textContent = '';
     this.claddingTiles.length = 0;
   }
 

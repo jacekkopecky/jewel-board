@@ -1,18 +1,18 @@
 import { delay, percent } from './lib.js';
+import { Tree } from './tree.js';
 const CLASS_UNCOVERED = 'uncovered';
 export class UI {
     state;
     canvasBoxEl = document.querySelector('#canvasBox');
     jewelsEl = document.querySelector('#jewels');
-    treeEl = document.querySelector('#tree');
     claddingEl = document.querySelector('#cladding');
     movesCountEl = document.querySelector('#movesCount');
     claddingTiles = [];
+    tree = new Tree();
     constructor(state) {
         this.state = state;
         if (this.canvasBoxEl == null ||
             this.jewelsEl == null ||
-            this.treeEl == null ||
             this.claddingEl == null ||
             this.movesCountEl == null) {
             throw new Error('cannot find expected HTML elements');
@@ -35,6 +35,7 @@ export class UI {
                 this.claddingTiles.push(tileEl);
             }
         }
+        this.tree.reset();
         // put jewels in
         for (const { jewel, position, flip } of this.state.jewelsPlaced) {
             let { w, h, svg } = jewel;
@@ -50,12 +51,11 @@ export class UI {
             img.style.width = percent(w / size);
             img.style.height = percent(h / size);
             this.jewelsEl.append(img);
-            const shadow = img.cloneNode(true);
-            shadow.classList.add('shadow');
-            this.treeEl.append(shadow);
+            const shadow = this.tree.addJewel(jewel, flip);
             jewel.el = img;
             jewel.shadowEl = shadow;
         }
+        this.tree.show();
         this.viewMoveCount();
         if (this.state.uncoveredTiles.length > 0) {
             await delay(200);
@@ -74,7 +74,6 @@ export class UI {
     reset() {
         this.claddingEl.textContent = '';
         this.jewelsEl.textContent = '';
-        this.treeEl.textContent = '';
         this.claddingTiles.length = 0;
     }
     uncoverTile(x, y, replaying = false) {
