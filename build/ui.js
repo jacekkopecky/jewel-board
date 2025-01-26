@@ -53,7 +53,7 @@ export class UI {
             this.jewelsEl.append(img);
             const shadow = this.tree.addJewel(jewel, flip);
             jewel.el = img;
-            jewel.shadowEl = shadow;
+            jewel.treeEl = shadow;
         }
         this.tree.show();
         this.viewMoveCount();
@@ -101,7 +101,7 @@ export class UI {
         for (const tile of this.claddingTiles) {
             tile.classList.add(CLASS_UNCOVERED);
         }
-        await delay(1000);
+        await delay(3000);
         // todo let the jewels fall off the tree into my score
         this.state.newPuzzle();
         // extra move to get started with the next game
@@ -112,7 +112,7 @@ export class UI {
     checkFullyUncoveredJewels() {
         let allUncovered = true;
         for (const { jewel, position, flip } of this.state.jewelsPlaced) {
-            if (!jewel.el || !jewel.shadowEl)
+            if (!jewel.el || !jewel.treeEl)
                 continue; // jewel not on board
             if (jewel.el.classList.contains(CLASS_UNCOVERED))
                 continue; // already uncovered
@@ -120,7 +120,7 @@ export class UI {
             const [px, py] = position;
             if (this.isAreaUncovered(px, py, w, h)) {
                 jewel.el.classList.add(CLASS_UNCOVERED);
-                jewel.shadowEl.classList.add(CLASS_UNCOVERED);
+                jewel.treeEl.classList.add(CLASS_UNCOVERED);
             }
             else {
                 allUncovered = false;

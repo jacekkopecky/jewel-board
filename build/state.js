@@ -3,7 +3,7 @@ import { selectJewels } from './jewels.js';
 import { templates } from './templates.js';
 const LOCAL_STORAGE_KEY = 'jewel-board';
 export class State {
-    _moves = 15;
+    _moves = 16;
     timeStarted = new Date().setHours(0, 0, 0, 0);
     daysSeen = 0;
     puzzleNumber = -1;
