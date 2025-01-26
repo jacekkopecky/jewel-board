@@ -70,20 +70,33 @@ export class Tree {
   }
 }
 
-function svg(name: string, attrs: Record<string, unknown>) {
+function svg(name: string, attrs?: Record<string, unknown>) {
   const el = document.createElementNS('http://www.w3.org/2000/svg', name);
-  for (const [key, value] of Object.entries(attrs)) {
-    el.setAttributeNS(null, key, String(value));
+  if (attrs) {
+    for (const [key, value] of Object.entries(attrs)) {
+      el.setAttributeNS(null, key, String(value));
+    }
   }
   return el;
 }
 
 function branchTo(x: number, y: number, angle: number) {
-  return svg('path', {
-    class: 'branch',
-    d: `M 4.9,9.5 Q 5,5 ${x},${y} Q 5,5 5.1,9.5 z`,
-    filter: `brightness(${(Math.abs(angle) - 90) / 400 + 1})`,
-  });
+  const g = svg('g');
+  const path = `M 4.9,9.5 Q 5,5 ${x},${y} Q 5,5 5.1,9.5 z`;
+  g.append(
+    svg('path', {
+      class: 'branchOutline',
+      d: path,
+    })
+  );
+  g.append(
+    svg('path', {
+      class: 'branch',
+      d: path,
+      filter: `brightness(${(Math.abs(angle) - 90) / 400 + 1})`,
+    })
+  );
+  return g;
 }
 
 function setAttr(el: SVGElement, name: string, val: unknown) {
@@ -92,11 +105,6 @@ function setAttr(el: SVGElement, name: string, val: unknown) {
 
 // position the given jewels on the 10x10 grid, at least 2 away from the border
 function positionJewels(jewels: JewelPlaced[]) {
-  for (const placement of jewels) {
-    placement.x = Math.random() * 10;
-    placement.y = Math.random() * 10;
-  }
-
   const all = jewels.length;
   if (all === 0) return;
 

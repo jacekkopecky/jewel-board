@@ -51,6 +51,15 @@ h1 {
       #6363ef
     );
 
+    .jewel.shadow {
+      filter: grayscale(100%) contrast(0.05) drop-shadow(0px 0px 0.05px black);
+
+      &.uncovered {
+        filter: none;
+        transition: filter 1s ease-in;
+      }
+    }
+
     path {
       stroke-linecap: round;
       stroke-linejoin: round;
@@ -61,6 +70,11 @@ h1 {
       stroke-width: 0.2;
       stroke: var(--bg);
       stroke: #7a140f;
+    }
+
+    .branchOutline {
+      stroke-width: 0.3;
+      stroke: black;
     }
   }
 }
@@ -146,15 +160,6 @@ img.jewel {
   &.uncovered {
     --scale: scale(0);
     transition: transform 1s;
-  }
-}
-
-.jewel.shadow {
-  filter: grayscale(100%) contrast(0.05);
-
-  &.uncovered {
-    filter: none;
-    transition: filter 1s ease-in;
   }
 }
 
