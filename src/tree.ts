@@ -12,6 +12,7 @@ interface JewelPlaced {
   flip: boolean;
   x: number;
   y: number;
+  angle: number;
   el: SVGElement;
 }
 
@@ -36,8 +37,8 @@ export class Tree {
     positionJewels(this.jewels);
 
     // first add branches so they're behind all the jewels
-    for (const { x, y } of this.jewels) {
-      this.treeSvgEl.append(branchTo(x, y));
+    for (const { x, y, angle } of this.jewels) {
+      this.treeSvgEl.append(branchTo(x, y, angle));
     }
 
     // then the jewels
@@ -63,7 +64,7 @@ export class Tree {
 
     jewelEl.classList.add('jewel', 'shadow');
 
-    this.jewels.push({ jewel, flip, x: 0, y: 0, el: jewelEl });
+    this.jewels.push({ jewel, flip, x: 0, y: 0, angle: 0, el: jewelEl });
 
     return jewelEl;
   }
@@ -77,10 +78,11 @@ function svg(name: string, attrs: Record<string, unknown>) {
   return el;
 }
 
-function branchTo(x: number, y: number) {
+function branchTo(x: number, y: number, angle: number) {
   return svg('path', {
     class: 'branch',
     d: `M 4.9,9.5 Q 5,5 ${x},${y} Q 5,5 5.1,9.5 z`,
+    filter: `brightness(${(Math.abs(angle) - 90) / 400 + 1})`,
   });
 }
 
@@ -103,6 +105,7 @@ function positionJewels(jewels: JewelPlaced[]) {
   if (all >= 5) {
     jewels[next]!.x = 5;
     jewels[next]!.y = 5;
+    jewels[next]!.angle = 180;
     next += 1;
   }
 
@@ -131,10 +134,13 @@ function positionJewels(jewels: JewelPlaced[]) {
     angle += angleStep;
   }
 
+  jewels.sort((a, b) => Math.abs(a.angle) - Math.abs(b.angle));
+
   function setNextToAngle(a: number) {
     const rad = (a / 180) * Math.PI;
     jewels[next]!.x = 5 + Math.sin(rad) * 3;
     jewels[next]!.y = 5 - Math.cos(rad) * 3;
+    jewels[next]!.angle = a;
     next += 1;
   }
 }

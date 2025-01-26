@@ -10,6 +10,7 @@ html {
 body {
   padding: 2em;
   background-color: var(--bg);
+  background: radial-gradient(#ff3020, var(--bg));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -21,6 +22,7 @@ body {
 h1 {
   margin: 0;
   color: var(--lightBg);
+  filter: brightness(1.6);
   flex: 0 1;
 }
 
@@ -39,17 +41,24 @@ h1 {
     height: 100%;
     width: 100%;
     border-radius: 1em;
-    background: radial-gradient(ellipse 200% 150% at 50% 150%, #0f0, #080 50%, #0ff 50%, #00a);
+    background: radial-gradient(
+      ellipse 200% 150% at 50% 150%,
+      #0f0,
+      #080 50%,
+      #5cffff 50%,
+      #6363ef
+    );
 
     path {
       stroke-linecap: round;
       stroke-linejoin: round;
       fill: none;
-      stroke: var(--darkBg);
     }
 
     .branch {
       stroke-width: 0.2;
+      stroke: var(--bg);
+      stroke: #7a140f;
     }
   }
 }
