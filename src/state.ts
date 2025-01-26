@@ -42,7 +42,6 @@ export class State {
 
     if (retval.puzzleNumber < 0) {
       retval.newPuzzle();
-      retval.save();
     }
 
     return retval;
@@ -57,7 +56,12 @@ export class State {
     }
   }
 
-  private newPuzzle() {
+  addBonusMoves(num: number) {
+    this._moves += num;
+    this.save();
+  }
+
+  newPuzzle() {
     this.puzzleNumber += 1;
 
     const template = templates[this.puzzleNumber % templates.length]!;
@@ -71,6 +75,8 @@ export class State {
     }
 
     this._jewelsPlaced = placement;
+
+    this.save();
   }
 
   addFlippedTile(x: number, y: number) {

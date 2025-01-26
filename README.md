@@ -36,7 +36,8 @@ you get one uncover per day
 - [x] on click
   - remove 1 from tiles to open, save
   - flip tile, add it to flipped tiles, save
-- [ ] if all jewels are fully uncovered, newPuzzle
+- [x] if all jewels are fully uncovered, newPuzzle, plus 1 move
+  - [ ] maybe shake the jewels off the tree, add them to a score in state
 - [ ] tree of jewels so you know what to look for
   - hang jewels on a tree but in grey and dim, remember the tree in localStorage
   - move jewels from board to tree when fully uncovered

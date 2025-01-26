@@ -82,10 +82,11 @@ export class UI {
     }
   }
 
-  private viewMoveCount() {
+  private viewMoveCount(allUncovered = false) {
     const moves = this.state.moves;
-    this.movesCountEl.textContent = moves ? String(this.state.moves) : 'play more tomorrow';
-    this.movesCountEl.classList.toggle('tomorrow', !moves);
+    const showTomorrow = !moves && !allUncovered;
+    this.movesCountEl.textContent = showTomorrow ? 'play more tomorrow' : String(this.state.moves);
+    this.movesCountEl.classList.toggle('tomorrow', showTomorrow);
   }
 
   private reset() {
@@ -113,12 +114,31 @@ export class UI {
       this.state.addFlippedTile(x, y);
     }
 
-    this.checkFullyUncoveredJewels();
-    this.viewMoveCount();
-    // todo also let the user play a new puzzle if all jewels uncovered
+    let allUncovered = this.checkFullyUncoveredJewels();
+    this.viewMoveCount(allUncovered);
+
+    if (allUncovered) this.nextGame();
   }
 
-  private checkFullyUncoveredJewels() {
+  private async nextGame() {
+    // make sure all tiles show as uncovered now
+    for (const tile of this.claddingTiles) {
+      tile.classList.add(CLASS_UNCOVERED);
+    }
+
+    await delay(1000);
+    // todo let the jewels fall off the tree into my score
+    this.state.newPuzzle();
+
+    // extra move to get started with the next game
+    this.state.addBonusMoves(1);
+
+    // reset view
+    this.doShow();
+  }
+
+  private checkFullyUncoveredJewels(): boolean {
+    let allUncovered = true;
     for (const { jewel, position, flip } of this.state.jewelsPlaced) {
       if (!jewel.el || !jewel.shadowEl) continue; // jewel not on board
       if (jewel.el.classList.contains(CLASS_UNCOVERED)) continue; // already uncovered
@@ -128,8 +148,11 @@ export class UI {
       if (this.isAreaUncovered(px, py, w, h)) {
         jewel.el.classList.add(CLASS_UNCOVERED);
         jewel.shadowEl.classList.add(CLASS_UNCOVERED);
+      } else {
+        allUncovered = false;
       }
     }
+    return allUncovered;
   }
 
   private isAreaUncovered(px: number, py: number, w: number, h: number) {
