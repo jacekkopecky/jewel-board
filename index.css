@@ -1,10 +1,15 @@
 html {
   margin: 0;
   padding: 0;
+
+  --darkBg: #6b0000;
+  --bg: #921710;
+  --lightBg: #c28550;
 }
+
 body {
   padding: 2em;
-  background-color: #921710;
+  background-color: var(--bg);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -15,27 +20,36 @@ body {
 
 h1 {
   margin: 0;
-  color: #c28550;
+  color: var(--lightBg);
   flex: 0 1;
 }
 
 #tree {
   width: 400px;
-  height: auto;
+  max-height: 400px;
   margin: 2em;
   flex: 1 1 100%;
   display: flex;
   align-items: center;
   position: relative;
 
-  & > .jewel {
-    position: static;
-    top: 0;
-    left: 0;
-    display: inline-block;
-    transform: none;
-    &.flip {
-      transform: rotate(90deg);
+  & > svg {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    border-radius: 1em;
+    background: radial-gradient(ellipse 200% 150% at 50% 150%, #0f0, #080 50%, #0ff 50%, #00a);
+
+    path {
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      stroke: var(--darkBg);
+    }
+
+    .branch {
+      stroke-width: 0.2;
     }
   }
 }
@@ -51,17 +65,17 @@ h1 {
     content: '';
     flex-grow: 1;
     border-bottom-right-radius: 1em;
-    background-color: #921710;
+    background-color: var(--bg);
   }
   &::after {
     content: '';
     flex-grow: 1;
     border-bottom-left-radius: 1em;
-    background-color: #921710;
+    background-color: var(--bg);
   }
 
   & > div {
-    background-color: #921710;
+    background-color: var(--bg);
     position: relative;
     font-family: sans-serif;
     display: flex;
@@ -69,8 +83,8 @@ h1 {
 
     & > span {
       display: block;
-      background-color: #c28550;
-      color: #921710;
+      background-color: var(--lightBg);
+      color: var(--bg);
       padding: 0 2rem;
       margin: 0.3rem 0.3rem 0;
       border-radius: 1rem;
@@ -102,7 +116,8 @@ h1 {
   height: 400px;
   flex-shrink: 0;
   position: relative;
-  background-color: #6b0000;
+  background-color: var(--darkBg);
+  border: solid thick black;
   border-radius: 0.5em;
 }
 
@@ -137,7 +152,6 @@ img.jewel {
   display: grid;
   grid-template-columns: repeat(var(--size, 5), 1fr);
   grid-template-rows: repeat(var(--size, 5), 1fr);
-  border: solid thick black;
   border-radius: 0.5em;
   z-index: 1;
 
@@ -150,7 +164,7 @@ img.jewel {
       display: block;
       position: absolute;
       inset: 0;
-      background-color: #c28550;
+      background-color: var(--lightBg);
       border: solid thin black;
       border-radius: 0.5em;
     }

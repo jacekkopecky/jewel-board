@@ -4,8 +4,8 @@ export interface Jewel {
   w: number;
   h: number;
   svg: string;
-  el?: HTMLElement;
-  shadowEl?: HTMLElement;
+  el?: Element;
+  treeEl?: Element;
 }
 
 export const jewels: Jewel[] = [
