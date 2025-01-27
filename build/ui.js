@@ -1,4 +1,5 @@
 import { delay, percent } from './lib.js';
+import { BONUS_MOVES_PER_JEWEL } from './state.js';
 import { Tree } from './tree.js';
 const CLASS_UNCOVERED = 'uncovered';
 export class UI {
@@ -91,7 +92,7 @@ export class UI {
         if (!replaying) {
             this.state.addFlippedTile(x, y);
         }
-        let allUncovered = this.checkFullyUncoveredJewels();
+        let allUncovered = this.checkFullyUncoveredJewels(replaying);
         this.viewMoveCount(allUncovered);
         if (allUncovered)
             this.nextGame();
@@ -113,14 +114,11 @@ export class UI {
             tile.classList.remove(CLASS_UNCOVERED);
         }
         await delay(5000 / this.claddingTiles.length);
-        // extra move to get started with the next game
-        this.state.addBonusMoves(1);
-        this.viewMoveCount();
         // todo let the jewels fall off the tree into my score
         // reset view
         this.doShow();
     }
-    checkFullyUncoveredJewels() {
+    checkFullyUncoveredJewels(replaying) {
         let allUncovered = true;
         for (const { jewel, position, flip } of this.state.jewelsPlaced) {
             if (!jewel.el || !jewel.treeEl)
@@ -132,6 +130,14 @@ export class UI {
             if (this.isAreaUncovered(px, py, w, h)) {
                 jewel.el.classList.add(CLASS_UNCOVERED);
                 jewel.treeEl.classList.add(CLASS_UNCOVERED);
+                if (!replaying) {
+                    // extra move as reward for uncovering a whole jewel
+                    // if the user quickly reloads before getting the bonus, they lose it
+                    setTimeout(() => {
+                        this.state.addBonusMoves(BONUS_MOVES_PER_JEWEL);
+                        this.viewMoveCount();
+                    }, 1000);
+                }
             }
             else {
                 allUncovered = false;

@@ -4,8 +4,12 @@ import { templates } from './templates.js';
 
 const LOCAL_STORAGE_KEY = 'jewel-board';
 
+const STARTING_MOVES = 12;
+const MOVES_PER_DAY = 5;
+export const BONUS_MOVES_PER_JEWEL = 1;
+
 export class State {
-  private _moves = 16;
+  private _moves = STARTING_MOVES;
   private timeStarted = new Date().setHours(0, 0, 0, 0);
   private daysSeen = 0;
 
@@ -49,9 +53,13 @@ export class State {
 
   private updateMoves() {
     const now = Date.now();
-    const daysSinceStart = Math.trunc((now - this.timeStarted) / 1000 / 60 / 60 / 24);
+    const daysSinceStart = Math.floor((now - this.timeStarted) / 1000 / 60 / 60 / 24);
     if (daysSinceStart > this.daysSeen) {
-      this._moves += daysSinceStart - this.daysSeen;
+      this._moves += (daysSinceStart - this.daysSeen) * MOVES_PER_DAY;
+      this.daysSeen = daysSinceStart;
+
+      // todo show an animated +MOVES_PER_DAY
+
       this.save();
     }
   }

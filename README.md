@@ -42,7 +42,10 @@ you get one uncover per day
   - hang jewels on a tree but in grey and dim, remember the tree in localStorage
   - move jewels from board to tree when fully uncovered
   - [x] fix moves indicator background
-  - [ ] give branches an outline, maybe little off-shoots?
+  - [x] give branches an outline, maybe little off-shoots?
+- [.] BUG: repeated reload after a day shouldn't give me extra moves
+- [ ] give move counter block a min width so 999 fits without making it bigger
+- [ ] show an animated rising +1 (or +whatever) when we get an extra move
 
 ## maybes
 
