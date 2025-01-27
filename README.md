@@ -45,7 +45,8 @@ you get one uncover per day
   - [x] give branches an outline, maybe little off-shoots?
 - [.] BUG: repeated reload after a day shouldn't give me extra moves
 - [x] give move counter block a min width so 999 fits without making it bigger
-- [ ] show an animated rising +1 (or +whatever) when we get an extra move
+- [x] show an animated rising +1 (or +whatever) when we get an extra move
+- [ ] let the jewels fall off the tree into my score
 
 ## maybes
 

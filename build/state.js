@@ -32,7 +32,6 @@ export class State {
             if (storedStr) {
                 const data = JSON.parse(storedStr);
                 Object.assign(retval, data);
-                retval.updateMoves();
             }
         }
         catch (e) {
@@ -49,7 +48,6 @@ export class State {
         if (daysSinceStart > this.daysSeen) {
             this._moves += (daysSinceStart - this.daysSeen) * MOVES_PER_DAY;
             this.daysSeen = daysSinceStart;
-            // todo show an animated +MOVES_PER_DAY
             this.save();
         }
     }

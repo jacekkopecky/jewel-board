@@ -38,7 +38,6 @@ export class State {
       if (storedStr) {
         const data = JSON.parse(storedStr);
         Object.assign(retval, data);
-        retval.updateMoves();
       }
     } catch (e) {
       console.warn('error loading state from', LOCAL_STORAGE_KEY);
@@ -51,14 +50,12 @@ export class State {
     return retval;
   }
 
-  private updateMoves() {
+  updateMoves() {
     const now = Date.now();
     const daysSinceStart = Math.floor((now - this.timeStarted) / 1000 / 60 / 60 / 24);
     if (daysSinceStart > this.daysSeen) {
       this._moves += (daysSinceStart - this.daysSeen) * MOVES_PER_DAY;
       this.daysSeen = daysSinceStart;
-
-      // todo show an animated +MOVES_PER_DAY
 
       this.save();
     }

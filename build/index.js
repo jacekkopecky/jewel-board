@@ -3,8 +3,12 @@
 // import { percent, selectRandom } from './lib.js';
 import { State } from './state.js';
 import { UI } from './ui.js';
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
     const state = State.load();
-    UI.show(state);
+    const ui = await UI.show(state);
+    setTimeout(() => {
+        state.updateMoves();
+        ui.viewMoveCount();
+    }, 1000);
 });
 //# sourceMappingURL=index.js.map

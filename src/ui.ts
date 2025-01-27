@@ -9,6 +9,7 @@ export class UI {
   private readonly jewelsEl = document.querySelector<HTMLElement>('#jewels')!;
   private readonly claddingEl = document.querySelector<HTMLElement>('#cladding')!;
   private readonly movesCountEl = document.querySelector<HTMLElement>('#movesCount')!;
+  private readonly moveBonusFloatEl = document.querySelector<HTMLElement>('#moveBonusFloat')!;
 
   private claddingTiles: HTMLElement[] = [];
   private tree = new Tree();
@@ -18,7 +19,8 @@ export class UI {
       this.canvasBoxEl == null ||
       this.jewelsEl == null ||
       this.claddingEl == null ||
-      this.movesCountEl == null
+      this.movesCountEl == null ||
+      this.moveBonusFloatEl == null
     ) {
       throw new Error('cannot find expected HTML elements');
     }
@@ -28,6 +30,7 @@ export class UI {
     const ui = new UI(state);
 
     ui.doShow();
+    return ui;
   }
 
   private async doShow() {
@@ -62,7 +65,7 @@ export class UI {
     }
 
     this.tree.show();
-    this.viewMoveCount();
+    this.viewMoveCount(true);
 
     if (this.state.uncoveredTiles.length > 0) {
       await delay(200);
@@ -90,11 +93,21 @@ export class UI {
     }
   }
 
-  private viewMoveCount(allUncovered = false) {
+  private previousMoveCount = -1;
+
+  viewMoveCount(showZero = false) {
     const moves = this.state.moves;
-    const showTomorrow = !moves && !allUncovered;
+    const showTomorrow = !moves && !showZero;
     this.movesCountEl.textContent = showTomorrow ? 'play more tomorrow' : String(this.state.moves);
     this.movesCountEl.classList.toggle('tomorrow', showTomorrow);
+
+    if (this.previousMoveCount > -1 && moves > this.previousMoveCount) {
+      const span = document.createElement('span');
+      span.textContent = `+${moves - this.previousMoveCount}`;
+      this.moveBonusFloatEl.append(span);
+      setTimeout(() => span.remove(), 3000);
+    }
+    this.previousMoveCount = moves;
   }
 
   private uncoverTile(x: number, y: number, replaying = false) {
@@ -115,8 +128,8 @@ export class UI {
       this.state.addFlippedTile(x, y);
     }
 
-    let allUncovered = this.checkFullyUncoveredJewels(replaying);
-    this.viewMoveCount(allUncovered);
+    let { allUncovered, anyUncovered } = this.checkFullyUncoveredJewels(replaying);
+    this.viewMoveCount(anyUncovered);
 
     if (allUncovered) this.nextGame();
   }
@@ -143,14 +156,16 @@ export class UI {
 
     await delay(5000 / this.claddingTiles.length);
 
-    // todo let the jewels fall off the tree into my score
-
     // reset view
     this.doShow();
   }
 
-  private checkFullyUncoveredJewels(replaying: boolean): boolean {
+  private checkFullyUncoveredJewels(replaying: boolean): {
+    allUncovered: boolean;
+    anyUncovered: boolean;
+  } {
     let allUncovered = true;
+    let anyUncovered = false;
     for (const { jewel, position, flip } of this.state.jewelsPlaced) {
       if (!jewel.el || !jewel.treeEl) continue; // jewel not on board
       if (jewel.el.classList.contains(CLASS_UNCOVERED)) continue; // already uncovered
@@ -162,6 +177,7 @@ export class UI {
         jewel.treeEl.classList.add(CLASS_UNCOVERED);
 
         if (!replaying) {
+          anyUncovered = true;
           // extra move as reward for uncovering a whole jewel
           // if the user quickly reloads before getting the bonus, they lose it
           setTimeout(() => {
@@ -173,7 +189,7 @@ export class UI {
         allUncovered = false;
       }
     }
-    return allUncovered;
+    return { allUncovered, anyUncovered };
   }
 
   private isAreaUncovered(px: number, py: number, w: number, h: number) {

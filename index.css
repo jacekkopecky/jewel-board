@@ -132,6 +132,23 @@ h1 {
       }
     }
 
+    #moveBonusFloat {
+      position: absolute;
+      left: 100%;
+      top: 0;
+
+      & > * {
+        position: absolute;
+        margin-left: 0.25em;
+        font-size: 250%;
+        line-height: 1em;
+        color: var(--lightBg);
+        filter: brightness(1.6);
+        text-shadow: 0.1em 0.1em 0.2em black;
+        animation: floatUp 1s ease-in both;
+      }
+    }
+
     &::before {
       content: '';
       background-color: var(--darkBg);
@@ -139,6 +156,20 @@ h1 {
       inset: 0;
       border-radius: 0.75em 0.75em 0 0;
     }
+  }
+}
+
+@keyframes floatUp {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-1.5em);
+    opacity: 0;
   }
 }
 
