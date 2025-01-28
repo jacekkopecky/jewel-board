@@ -37,16 +37,19 @@ you get one uncover per day
   - remove 1 from tiles to open, save
   - flip tile, add it to flipped tiles, save
 - [x] if all jewels are fully uncovered, newPuzzle, plus 1 move
-  - [ ] maybe shake the jewels off the tree, add them to a score in state
 - [x] tree of jewels so you know what to look for
   - hang jewels on a tree but in grey and dim, remember the tree in localStorage
   - move jewels from board to tree when fully uncovered
   - [x] fix moves indicator background
   - [x] give branches an outline, maybe little off-shoots?
-- [.] BUG: repeated reload after a day shouldn't give me extra moves
+- [x] BUG: repeated reload after a day shouldn't give me extra moves
 - [x] give move counter block a min width so 999 fits without making it bigger
 - [x] show an animated rising +1 (or +whatever) when we get an extra move
-- [ ] let the jewels fall off the tree into my score
+- [ ] make the jewels on the tree smaller still when not uncovered, then they can grow (but it's not
+      just a simple CSS, so maybe not)
+- [ ] let the jewels fall off the tree
+  - shake the jewels off the tree, add them to a score in state
+- [ ] make more jewels, use this for inspiration: https://c7.alamy.com/comp/2BP2WMA/2BP2WMA.jpg
 
 ## maybes
 
