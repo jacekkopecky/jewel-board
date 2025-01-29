@@ -50,6 +50,9 @@ you get one uncover per day
 - [ ] let the jewels fall off the tree
   - shake the jewels off the tree, add them to a score in state
 - [ ] make more jewels, use this for inspiration: https://c7.alamy.com/comp/2BP2WMA/2BP2WMA.jpg
+- [x] bug: when preparing new board, clicking on it misbehaves
+  - similarly, on initial replay the board should not be clickable
+- [ ] add a "replay previous game" button? it would be slower than on load
 
 ## maybes
 

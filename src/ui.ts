@@ -14,6 +14,8 @@ export class UI {
   private claddingTiles: HTMLElement[] = [];
   private tree = new Tree();
 
+  private inert = false;
+
   constructor(private state: State) {
     if (
       this.canvasBoxEl == null ||
@@ -35,6 +37,7 @@ export class UI {
 
   private async doShow() {
     const size = this.state.size;
+    this.inert = true;
 
     this.generateCladding();
 
@@ -74,6 +77,8 @@ export class UI {
       await delay(100);
       this.uncoverTile(x, y, true);
     }
+
+    this.inert = false;
   }
 
   private generateCladding() {
@@ -85,7 +90,7 @@ export class UI {
     for (let y = 0; y < size; y += 1) {
       for (let x = 0; x < size; x += 1) {
         const tileEl = document.createElement('div');
-        tileEl.addEventListener('click', () => this.uncoverTile(x, y));
+        tileEl.addEventListener('click', () => !this.inert && this.uncoverTile(x, y));
         this.claddingEl.append(tileEl);
 
         this.claddingTiles.push(tileEl);
@@ -135,6 +140,7 @@ export class UI {
   }
 
   private async nextGame() {
+    this.inert = true;
     // make sure all tiles show as uncovered now
     for (const tile of this.claddingTiles) {
       tile.classList.add(CLASS_UNCOVERED);
@@ -158,6 +164,7 @@ export class UI {
 
     // reset view
     this.doShow();
+    this.inert = false;
   }
 
   private checkFullyUncoveredJewels(replaying: boolean): {

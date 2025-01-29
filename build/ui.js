@@ -11,6 +11,7 @@ export class UI {
     moveBonusFloatEl = document.querySelector('#moveBonusFloat');
     claddingTiles = [];
     tree = new Tree();
+    inert = false;
     constructor(state) {
         this.state = state;
         if (this.canvasBoxEl == null ||
@@ -28,6 +29,7 @@ export class UI {
     }
     async doShow() {
         const size = this.state.size;
+        this.inert = true;
         this.generateCladding();
         this.tree.reset();
         // put jewels in
@@ -59,6 +61,7 @@ export class UI {
             await delay(100);
             this.uncoverTile(x, y, true);
         }
+        this.inert = false;
     }
     generateCladding() {
         const size = this.state.size;
@@ -68,7 +71,7 @@ export class UI {
         for (let y = 0; y < size; y += 1) {
             for (let x = 0; x < size; x += 1) {
                 const tileEl = document.createElement('div');
-                tileEl.addEventListener('click', () => this.uncoverTile(x, y));
+                tileEl.addEventListener('click', () => !this.inert && this.uncoverTile(x, y));
                 this.claddingEl.append(tileEl);
                 this.claddingTiles.push(tileEl);
             }
@@ -109,6 +112,7 @@ export class UI {
             this.nextGame();
     }
     async nextGame() {
+        this.inert = true;
         // make sure all tiles show as uncovered now
         for (const tile of this.claddingTiles) {
             tile.classList.add(CLASS_UNCOVERED);
@@ -127,6 +131,7 @@ export class UI {
         await delay(5000 / this.claddingTiles.length);
         // reset view
         this.doShow();
+        this.inert = false;
     }
     checkFullyUncoveredJewels(replaying) {
         let allUncovered = true;
