@@ -6,11 +6,6 @@ you get one uncover per day
 
 ## todo
 
-- [x] add a "replay previous game" button? it would want to be slower than on load
-  - add a replay button in HTML and CSS
-  - in doShow(), hide or show it depending on previousState and replaying
-  - on press, replay or stop replay
-- [x] refactor cladding into its own class
 - [ ] make more jewels, use this for inspiration: https://c7.alamy.com/comp/2BP2WMA/2BP2WMA.jpg
 - [ ] make the jewels on the tree smaller still when not uncovered, then they can grow (but it's not
       just a simple CSS, so maybe not)
@@ -21,7 +16,20 @@ you get one uncover per day
 
 - [ ] clicking with 0 moves could show how long until next move is available
 - [ ] select one type of jewel from a bag of the same size so the shape is unambiguous
-- [ ] handle the case when the selected jewels cannot be placed
+  - or select as many diverse ones as possible
+
+---
+
+## done 2025-01-30
+
+- [x] add a "replay previous game" button? it would want to be slower than on load
+  - add a replay button in HTML and CSS
+  - in doShow(), hide or show it depending on previousState and replaying
+  - on press, replay or stop replay
+- [x] refactor cladding into its own class
+- [o] handle the case when the selected jewels cannot be placed?
+  - templates are either possible or not, creating a new template will quickly show it's not
+    possible
 
 ## done 2025-01-29
 
