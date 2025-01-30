@@ -6,11 +6,14 @@ export function percent(num: number) {
   return `${(num * 100).toFixed(3)}%`;
 }
 
+export type DelayFn = typeof delay;
+export type DelayInterruptible = DelayFn & { interrupt(): void };
+
 export function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function delayInterruptible(): typeof delay & { interrupt(): void } {
+export function delayInterruptible(): DelayInterruptible {
   let interrupt: () => void;
   let interrupted = false;
 

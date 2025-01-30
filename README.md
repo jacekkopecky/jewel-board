@@ -10,7 +10,7 @@ you get one uncover per day
   - add a replay button in HTML and CSS
   - in doShow(), hide or show it depending on previousState and replaying
   - on press, replay or stop replay
-- [ ] refactor cladding into its own class
+- [x] refactor cladding into its own class
 - [ ] make more jewels, use this for inspiration: https://c7.alamy.com/comp/2BP2WMA/2BP2WMA.jpg
 - [ ] make the jewels on the tree smaller still when not uncovered, then they can grow (but it's not
       just a simple CSS, so maybe not)

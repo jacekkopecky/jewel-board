@@ -1,29 +1,26 @@
+import { Cladding } from './cladding.js';
 import { Pos } from './jewel-board.js';
 import { Jewel } from './jewels.js';
-import { delay, delayInterruptible, percent } from './lib.js';
+import { delay, DelayFn, delayInterruptible, percent } from './lib.js';
 import { BONUS_MOVES_PER_JEWEL, StateInterface } from './state.js';
 import { Tree } from './tree.js';
 
 const CLASS_UNCOVERED = 'uncovered';
 
 export class UI {
-  private readonly canvasBoxEl = document.querySelector<HTMLElement>('#canvasBox')!;
   private readonly jewelsEl = document.querySelector<HTMLElement>('#jewels')!;
-  private readonly claddingEl = document.querySelector<HTMLElement>('#cladding')!;
   private readonly movesCountEl = document.querySelector<HTMLElement>('#movesCount')!;
   private readonly moveBonusFloatEl = document.querySelector<HTMLElement>('#moveBonusFloat')!;
   private readonly replayEl = document.querySelector<HTMLElement>('#replay')!;
 
-  private claddingTiles: HTMLElement[] = [];
-  private tree = new Tree();
-
   private inert = false;
+
+  private tree = new Tree();
+  private cladding = new Cladding((x, y) => !this.inert && this.uncoverTile(x, y));
 
   constructor(private state: StateInterface) {
     if (
-      this.canvasBoxEl == null ||
       this.jewelsEl == null ||
-      this.claddingEl == null ||
       this.movesCountEl == null ||
       this.moveBonusFloatEl == null ||
       this.replayEl == null
@@ -42,7 +39,10 @@ export class UI {
   async replay(state: StateInterface) {
     try {
       const ui = new UI(state);
-      await ui.doShow(true);
+      await ui.doShow(true, async (delayFn) => {
+        this.cladding.regenerate();
+        await this.cladding.coverAllSlowly(delayFn);
+      });
     } catch {
       // ignoring the exception, it must come from the replay being interrupted
     }
@@ -51,11 +51,11 @@ export class UI {
     await this.doShow();
   }
 
-  private async doShow(replaying = false) {
+  private async doShow(replaying = false, onDone?: (delayFn: DelayFn) => void | Promise<void>) {
     const size = this.state.size;
     this.inert = true;
 
-    this.generateCladding(size, replaying);
+    this.cladding.generate(size);
 
     this.tree.reset();
 
@@ -89,9 +89,9 @@ export class UI {
     }
 
     if (replaying) {
-      this.claddingTiles.forEach((tile) => tile.classList.add(CLASS_UNCOVERED));
+      this.cladding.uncoverAll();
       await delayFn(replayDelay * 4);
-      this.claddingTiles.forEach((tile) => tile.classList.remove(CLASS_UNCOVERED));
+      this.cladding.coverAll();
       await delayFn(replayDelay);
     }
 
@@ -102,7 +102,7 @@ export class UI {
 
     if (replaying) {
       await delayFn(replayDelay * 4);
-      // todo show new cladding nicely like on a new puzzle
+      await onDone?.(delayFn);
     }
 
     this.inert = replaying;
@@ -114,6 +114,8 @@ export class UI {
   ) {
     this.replayEl.classList.toggle('hidden', this.state.getPreviousState() == null);
     this.replayEl.classList.toggle('cancel', replaying);
+
+    // set onclick so there can only be one handler
     this.replayEl.onclick = () => {
       if (replaying) {
         delayFn.interrupt();
@@ -122,25 +124,6 @@ export class UI {
         if (previousState && !this.inert) this.replay(previousState);
       }
     };
-  }
-
-  private generateCladding(size: number, replaying = false) {
-    this.canvasBoxEl.style.setProperty('--size', String(size));
-    this.claddingEl.textContent = '';
-    this.claddingTiles.length = 0;
-
-    for (let y = 0; y < size; y += 1) {
-      for (let x = 0; x < size; x += 1) {
-        const tileEl = document.createElement('div');
-
-        if (!replaying) {
-          tileEl.addEventListener('click', () => !this.inert && this.uncoverTile(x, y));
-        }
-
-        this.claddingEl.append(tileEl);
-        this.claddingTiles.push(tileEl);
-      }
-    }
   }
 
   private previousMoveCount = -1;
@@ -165,15 +148,7 @@ export class UI {
       return;
     }
 
-    const index = x + y * this.state.size;
-    const tileEl = this.claddingTiles[index];
-    if (!tileEl) {
-      throw new Error(`cannot find tile ${x},${y}`);
-    }
-
-    if (tileEl.classList.contains(CLASS_UNCOVERED)) return; // already uncovered
-
-    tileEl?.classList.add(CLASS_UNCOVERED);
+    this.cladding.uncover(x, y);
     if (!replaying) {
       this.state.addFlippedTile(x, y);
     }
@@ -190,25 +165,14 @@ export class UI {
   private async nextGame() {
     this.inert = true;
     // make sure all tiles show as uncovered now
-    for (const tile of this.claddingTiles) {
-      tile.classList.add(CLASS_UNCOVERED);
-    }
+    this.cladding.uncoverAll();
 
     await delay(2000);
 
     this.state.newPuzzle();
-    this.generateCladding(this.state.size);
-    // hide all tiles again so we can slowly uncover them in a moment
-    for (const tile of this.claddingTiles) {
-      tile.classList.add(CLASS_UNCOVERED);
-    }
+    this.cladding.generate(this.state.size);
 
-    for (const tile of this.claddingTiles) {
-      await delay(5000 / this.claddingTiles.length);
-      tile.classList.remove(CLASS_UNCOVERED);
-    }
-
-    await delay(5000 / this.claddingTiles.length);
+    await this.cladding.coverAllSlowly();
 
     // reset view
     this.doShow();
@@ -227,7 +191,7 @@ export class UI {
 
       const [w, h] = flip ? [jewel.h, jewel.w] : [jewel.w, jewel.h];
       const [px, py] = position;
-      if (this.isAreaUncovered(px, py, w, h)) {
+      if (this.cladding.isAreaUncovered(px, py, w, h)) {
         jewel.el.classList.add(CLASS_UNCOVERED);
         jewel.treeEl.classList.add(CLASS_UNCOVERED);
 
@@ -245,16 +209,6 @@ export class UI {
       }
     }
     return { allUncovered, anyUncovered };
-  }
-
-  private isAreaUncovered(px: number, py: number, w: number, h: number) {
-    for (let x = px; x < px + w; x += 1) {
-      for (let y = py; y < py + h; y += 1) {
-        const tileEl = this.claddingTiles[y * this.state.size + x];
-        if (!tileEl?.classList.contains(CLASS_UNCOVERED)) return false;
-      }
-    }
-    return true;
   }
 }
 
