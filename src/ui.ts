@@ -49,6 +49,7 @@ export class UI {
 
     // back to this - the original state
     await this.doShow();
+    this.viewMoveCount();
   }
 
   private async doShow(replaying = false, onDone?: (delayFn: DelayFn) => void | Promise<void>) {

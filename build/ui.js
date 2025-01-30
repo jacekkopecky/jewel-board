@@ -39,6 +39,7 @@ export class UI {
         }
         // back to this - the original state
         await this.doShow();
+        this.viewMoveCount();
     }
     async doShow(replaying = false, onDone) {
         const size = this.state.size;
