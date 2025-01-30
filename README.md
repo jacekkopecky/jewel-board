@@ -6,6 +6,30 @@ you get one uncover per day
 
 ## todo
 
+- [ ] add a "replay previous game" button? it would want to be slower than on load
+  - add a replay button in HTML and CSS
+  - in doShow(), hide or show it depending on previousState and replaying
+  - on press, replay or stop replay
+- [ ] refactor cladding into its own class
+- [ ] make more jewels, use this for inspiration: https://c7.alamy.com/comp/2BP2WMA/2BP2WMA.jpg
+- [ ] make the jewels on the tree smaller still when not uncovered, then they can grow (but it's not
+      just a simple CSS, so maybe not)
+- [ ] let the jewels fall off the tree
+  - shake the jewels off the tree, add them to a score in state
+
+## maybes
+
+- [ ] clicking with 0 moves could show how long until next move is available
+- [ ] select one type of jewel from a bag of the same size so the shape is unambiguous
+- [ ] handle the case when the selected jewels cannot be placed
+
+## done 2025-01-29
+
+- [x] bug: when preparing new board, clicking on it misbehaves
+  - similarly, on initial replay the board should not be clickable
+
+## done earlier
+
 - [x] add a "tree" (box for now) or gray and dim jewels
 - [x] load state from localStorage:
   - [x] how many tiles to open we have
@@ -45,17 +69,3 @@ you get one uncover per day
 - [x] BUG: repeated reload after a day shouldn't give me extra moves
 - [x] give move counter block a min width so 999 fits without making it bigger
 - [x] show an animated rising +1 (or +whatever) when we get an extra move
-- [ ] make the jewels on the tree smaller still when not uncovered, then they can grow (but it's not
-      just a simple CSS, so maybe not)
-- [ ] let the jewels fall off the tree
-  - shake the jewels off the tree, add them to a score in state
-- [ ] make more jewels, use this for inspiration: https://c7.alamy.com/comp/2BP2WMA/2BP2WMA.jpg
-- [x] bug: when preparing new board, clicking on it misbehaves
-  - similarly, on initial replay the board should not be clickable
-- [ ] add a "replay previous game" button? it would be slower than on load
-
-## maybes
-
-- [ ] clicking with 0 moves could show how long until next move is available
-- [ ] select one type of jewel from a bag of the same size so the shape is unambiguous
-- [ ] handle the case when the selected jewels cannot be placed
