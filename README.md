@@ -6,7 +6,7 @@ you get one uncover per day
 
 ## todo
 
-- [ ] add a "replay previous game" button? it would want to be slower than on load
+- [x] add a "replay previous game" button? it would want to be slower than on load
   - add a replay button in HTML and CSS
   - in doShow(), hide or show it depending on previousState and replaying
   - on press, replay or stop replay

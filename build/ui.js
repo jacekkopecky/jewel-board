@@ -1,4 +1,4 @@
-import { delay, percent } from './lib.js';
+import { delay, delayInterruptible, percent } from './lib.js';
 import { BONUS_MOVES_PER_JEWEL } from './state.js';
 import { Tree } from './tree.js';
 const CLASS_UNCOVERED = 'uncovered';
@@ -9,6 +9,7 @@ export class UI {
     claddingEl = document.querySelector('#cladding');
     movesCountEl = document.querySelector('#movesCount');
     moveBonusFloatEl = document.querySelector('#moveBonusFloat');
+    replayEl = document.querySelector('#replay');
     claddingTiles = [];
     tree = new Tree();
     inert = false;
@@ -18,70 +19,104 @@ export class UI {
             this.jewelsEl == null ||
             this.claddingEl == null ||
             this.movesCountEl == null ||
-            this.moveBonusFloatEl == null) {
+            this.moveBonusFloatEl == null ||
+            this.replayEl == null) {
             throw new Error('cannot find expected HTML elements');
         }
     }
     static async show(state) {
         const ui = new UI(state);
-        ui.doShow();
+        await ui.doShow();
         return ui;
     }
-    async doShow() {
+    async replay(state) {
+        try {
+            const ui = new UI(state);
+            await ui.doShow(true);
+        }
+        catch {
+            // ignoring the exception, it must come from the replay being interrupted
+        }
+        // back to this - the original state
+        await this.doShow();
+    }
+    async doShow(replaying = false) {
         const size = this.state.size;
         this.inert = true;
-        this.generateCladding();
+        this.generateCladding(size, replaying);
         this.tree.reset();
         // put jewels in
         this.jewelsEl.textContent = '';
         for (const { jewel, position, flip } of this.state.jewelsPlaced) {
-            let { w, h, svg } = jewel;
-            const [x, y] = position;
-            const [wf, hf] = flip ? [h, w] : [w, h];
-            const img = document.createElement('img');
-            img.src = svg;
-            img.classList.add('jewel');
-            img.style.top = percent((y + hf / 2) / size);
-            img.style.left = percent((x + wf / 2) / size);
-            if (flip)
-                img.classList.add('flip');
-            img.style.width = percent(w / size);
-            img.style.height = percent(h / size);
-            this.jewelsEl.append(img);
+            const img = createJewelImg(jewel, position, flip, size);
             const shadow = this.tree.addJewel(jewel, flip);
+            this.jewelsEl.append(img);
             jewel.el = img;
             jewel.treeEl = shadow;
         }
         this.tree.show();
-        this.viewMoveCount(true);
+        if (replaying) {
+            this.viewMoveCount(false, 'replaying');
+        }
+        else {
+            this.viewMoveCount(true);
+        }
+        const replayDelay = replaying ? 500 : 100;
+        const delayFn = delayInterruptible();
+        this.updateReplayButton(replaying, delayFn);
         if (this.state.uncoveredTiles.length > 0) {
-            await delay(200);
+            await delayFn(replayDelay);
+        }
+        if (replaying) {
+            this.claddingTiles.forEach((tile) => tile.classList.add(CLASS_UNCOVERED));
+            await delayFn(replayDelay * 4);
+            this.claddingTiles.forEach((tile) => tile.classList.remove(CLASS_UNCOVERED));
+            await delayFn(replayDelay);
         }
         for (const [x, y] of this.state.uncoveredTiles) {
-            await delay(100);
+            await delayFn(replayDelay);
             this.uncoverTile(x, y, true);
         }
-        this.inert = false;
+        if (replaying) {
+            await delayFn(replayDelay * 4);
+            // todo show new cladding nicely like on a new puzzle
+        }
+        this.inert = replaying;
     }
-    generateCladding() {
-        const size = this.state.size;
+    updateReplayButton(replaying, delayFn) {
+        this.replayEl.classList.toggle('hidden', this.state.getPreviousState() == null);
+        this.replayEl.classList.toggle('cancel', replaying);
+        this.replayEl.onclick = () => {
+            if (replaying) {
+                delayFn.interrupt();
+            }
+            else {
+                const previousState = this.state.getPreviousState();
+                if (previousState && !this.inert)
+                    this.replay(previousState);
+            }
+        };
+    }
+    generateCladding(size, replaying = false) {
         this.canvasBoxEl.style.setProperty('--size', String(size));
         this.claddingEl.textContent = '';
         this.claddingTiles.length = 0;
         for (let y = 0; y < size; y += 1) {
             for (let x = 0; x < size; x += 1) {
                 const tileEl = document.createElement('div');
-                tileEl.addEventListener('click', () => !this.inert && this.uncoverTile(x, y));
+                if (!replaying) {
+                    tileEl.addEventListener('click', () => !this.inert && this.uncoverTile(x, y));
+                }
                 this.claddingEl.append(tileEl);
                 this.claddingTiles.push(tileEl);
             }
         }
     }
     previousMoveCount = -1;
-    viewMoveCount(showZero = false) {
+    viewMoveCount(showZero = false, message = 'play more tomorrow') {
         const moves = this.state.moves;
         const showTomorrow = !moves && !showZero;
-        this.movesCountEl.textContent = showTomorrow ? 'play more tomorrow' : String(this.state.moves);
+        this.movesCountEl.textContent = showTomorrow ? message : String(this.state.moves);
         this.movesCountEl.classList.toggle('tomorrow', showTomorrow);
         if (this.previousMoveCount > -1 && moves > this.previousMoveCount) {
             const span = document.createElement('span');
@@ -107,7 +142,9 @@ export class UI {
             this.state.addFlippedTile(x, y);
         }
         let { allUncovered, anyUncovered } = this.checkFullyUncoveredJewels(replaying);
-        this.viewMoveCount(anyUncovered);
+        if (!replaying) {
+            this.viewMoveCount(anyUncovered);
+        }
         if (allUncovered)
             this.nextGame();
     }
@@ -119,7 +156,7 @@ export class UI {
         }
         await delay(2000);
         this.state.newPuzzle();
-        this.generateCladding();
+        this.generateCladding(this.state.size);
         // hide all tiles again so we can slowly uncover them in a moment
         for (const tile of this.claddingTiles) {
             tile.classList.add(CLASS_UNCOVERED);
@@ -134,7 +171,7 @@ export class UI {
         this.inert = false;
     }
     checkFullyUncoveredJewels(replaying) {
-        let allUncovered = true;
+        let allUncovered = !replaying;
         let anyUncovered = false;
         for (const { jewel, position, flip } of this.state.jewelsPlaced) {
             if (!jewel.el || !jewel.treeEl)
@@ -172,5 +209,20 @@ export class UI {
         }
         return true;
     }
+}
+function createJewelImg(jewel, position, flip, size) {
+    let { w, h, svg } = jewel;
+    const [x, y] = position;
+    const [wf, hf] = flip ? [h, w] : [w, h];
+    const img = document.createElement('img');
+    img.src = svg;
+    img.classList.add('jewel');
+    img.style.top = percent((y + hf / 2) / size);
+    img.style.left = percent((x + wf / 2) / size);
+    if (flip)
+        img.classList.add('flip');
+    img.style.width = percent(w / size);
+    img.style.height = percent(h / size);
+    return img;
 }
 //# sourceMappingURL=ui.js.map
