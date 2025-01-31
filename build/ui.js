@@ -31,7 +31,7 @@ export class UI {
             const ui = new UI(state);
             await ui.doShow(true, async (delayFn) => {
                 this.cladding.regenerate();
-                await this.cladding.coverAllSlowly(delayFn);
+                await this.cladding.coverAllSlowly(delayFn, 2000);
             });
         }
         catch {

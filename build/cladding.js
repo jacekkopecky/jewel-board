@@ -38,13 +38,14 @@ export class Cladding {
     coverAll() {
         this.claddingTiles.forEach((tile) => tile.classList.remove(CLASS_UNCOVERED));
     }
-    async coverAllSlowly(delayFn = delay) {
+    async coverAllSlowly(delayFn = delay, totalTimeMs = 5000) {
         this.uncoverAll();
+        const stepDelay = totalTimeMs / (this.claddingTiles.length + 1);
         for (const tile of this.claddingTiles) {
-            await delayFn(5000 / this.claddingTiles.length);
+            await delayFn(stepDelay);
             tile.classList.remove(CLASS_UNCOVERED);
         }
-        await delayFn(5000 / this.claddingTiles.length);
+        await delayFn(stepDelay);
     }
     isAreaUncovered(px, py, w, h) {
         for (let x = px; x < px + w; x += 1) {

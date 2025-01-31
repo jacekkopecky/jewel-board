@@ -9,10 +9,8 @@ export function delay(ms) {
 }
 export function delayInterruptible() {
     let interrupt;
-    let interrupted = false;
     const interruptPromise = new Promise((_, reject) => {
         interrupt = () => {
-            interrupted = true;
             reject();
         };
     });
