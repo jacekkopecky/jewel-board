@@ -15,11 +15,9 @@ export function delay(ms: number) {
 
 export function delayInterruptible(): DelayInterruptible {
   let interrupt: () => void;
-  let interrupted = false;
 
   const interruptPromise = new Promise<void>((_, reject) => {
     interrupt = () => {
-      interrupted = true;
       reject();
     };
   });
