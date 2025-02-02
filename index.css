@@ -271,3 +271,8 @@ img.jewel {
     }
   }
 }
+
+.preload {
+  position: absolute;
+  opacity: 0;
+}

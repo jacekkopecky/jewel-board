@@ -23,6 +23,7 @@ you get one uncover per day
 
 ## done 2025-02-02
 
+- [x] add more jewels
 - [x] in replay (and maybe always), highlight the tile you've clicked so it flashes and is more
       visible?
 
