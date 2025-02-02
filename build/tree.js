@@ -110,7 +110,7 @@ function positionJewels(jewels) {
 }
 // make jewels smaller if there's more of them
 function scaleJewel(j, num) {
-    const scale = 0.95 ** (Math.max(num, 4) - 4);
+    const scale = 0.93 ** (Math.max(num, 4) - 4);
     return { w: j.w * scale, h: j.h * scale };
 }
 //# sourceMappingURL=tree.js.map

@@ -157,6 +157,6 @@ function positionJewels(jewels: JewelPlaced[]) {
 
 // make jewels smaller if there's more of them
 function scaleJewel(j: Jewel, num: number) {
-  const scale = 0.95 ** (Math.max(num, 4) - 4);
+  const scale = 0.93 ** (Math.max(num, 4) - 4);
   return { w: j.w * scale, h: j.h * scale };
 }
