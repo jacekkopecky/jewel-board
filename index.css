@@ -264,6 +264,10 @@ img.jewel {
 
     &.uncovered {
       opacity: 0;
+
+      &::after {
+        background: #ffca9b;
+      }
     }
   }
 }

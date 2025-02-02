@@ -65,9 +65,6 @@ export class UI {
         const replayDelay = replaying ? 500 : 100;
         const delayFn = delayInterruptible();
         this.updateReplayButton(replaying, delayFn);
-        if (this.state.uncoveredTiles.length > 0) {
-            await delayFn(replayDelay);
-        }
         if (replaying) {
             this.cladding.uncoverAll();
             await delayFn(replayDelay * 4);

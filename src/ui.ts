@@ -85,10 +85,6 @@ export class UI {
 
     this.updateReplayButton(replaying, delayFn);
 
-    if (this.state.uncoveredTiles.length > 0) {
-      await delayFn(replayDelay);
-    }
-
     if (replaying) {
       this.cladding.uncoverAll();
       await delayFn(replayDelay * 4);
