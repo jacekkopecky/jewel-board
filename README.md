@@ -6,6 +6,7 @@ you get one uncover per day
 
 ## todo
 
+- [ ] rotate jewels in all 4 directions?
 - [ ] at the end of replay, show all jewels on the board again?
 - [ ] make more jewels, use this for inspiration: https://c7.alamy.com/comp/2BP2WMA/2BP2WMA.jpg
 - [ ] make the jewels on the tree smaller still when not uncovered, then they can grow (but it's not
@@ -20,6 +21,10 @@ you get one uncover per day
   - or select as many diverse ones as possible
 
 ---
+
+## done 2025-02-04
+
+- [x] add a favicon - one of the jewels?
 
 ## done 2025-02-02
 
