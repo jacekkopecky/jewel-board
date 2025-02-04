@@ -19,8 +19,10 @@ export const jewels: Jewel[] = [
   { w: 2, h: 2, svg: 'svgs/2x2-yellow.svg' },
   { w: 2, h: 2, svg: 'svgs/2x2-orange.svg' },
   { w: 2, h: 2, svg: 'svgs/2x2-green-triangle.svg' },
+  { w: 2, h: 2, svg: 'svgs/2x2-green-triangle-b.svg' }, // upside-down
   { w: 2, h: 2, svg: 'svgs/2x2-blue.svg' },
   { w: 2, h: 3, svg: 'svgs/2x3-purple.svg' },
+  { w: 2, h: 3, svg: 'svgs/2x3-purple-b.svg' }, // upside-down
   { w: 2, h: 3, svg: 'svgs/2x3-pink.svg' },
   { w: 2, h: 3, svg: 'svgs/2x3-blue.svg' },
 ];
