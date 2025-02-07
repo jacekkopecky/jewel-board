@@ -9,8 +9,14 @@ window.addEventListener('load', async () => {
     preloadJewels();
     const state = State.load();
     const ui = await UI.show(state);
-    await delay(1000);
-    state.updateMoves();
-    ui.viewMoveCount();
+    updateMoves();
+    document.addEventListener('visibilitychange', updateMoves);
+    async function updateMoves() {
+        await delay(1000);
+        if (document.visibilityState === 'visible') {
+            state.updateMoves();
+            ui.viewMoveCount();
+        }
+    }
 });
 //# sourceMappingURL=index.js.map

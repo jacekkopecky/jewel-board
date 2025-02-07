@@ -13,8 +13,16 @@ window.addEventListener('load', async () => {
 
   const ui = await UI.show(state);
 
-  await delay(1000);
+  updateMoves();
 
-  state.updateMoves();
-  ui.viewMoveCount();
+  document.addEventListener('visibilitychange', updateMoves);
+
+  async function updateMoves() {
+    await delay(1000);
+
+    if (document.visibilityState === 'visible') {
+      state.updateMoves();
+      ui.viewMoveCount();
+    }
+  }
 });

@@ -21,6 +21,10 @@ you get one uncover per day
 
 ---
 
+## done 2025-02-07
+
+- [x] check for day bonus on wake (when I switch to that tab)
+
 ## done 2025-02-04
 
 - [x] add a favicon - one of the jewels?
