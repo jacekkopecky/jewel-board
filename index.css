@@ -187,7 +187,7 @@ h1 {
       content: 'X';
     }
 
-    transition: opacity 1s 1s;
+    transition: opacity 1s;
 
     &.hidden {
       opacity: 0;

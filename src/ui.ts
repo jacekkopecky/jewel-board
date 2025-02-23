@@ -123,6 +123,10 @@ export class UI {
     };
   }
 
+  private disableReplayButton() {
+    this.replayEl.classList.add('hidden');
+  }
+
   private previousMoveCount = -1;
 
   viewMoveCount(showZero = false, message = 'play more tomorrow') {
@@ -161,6 +165,7 @@ export class UI {
 
   private async nextGame() {
     this.inert = true;
+    this.disableReplayButton();
     // make sure all tiles show as uncovered now
     this.cladding.uncoverAll();
 

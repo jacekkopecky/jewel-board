@@ -96,6 +96,9 @@ export class UI {
             }
         };
     }
+    disableReplayButton() {
+        this.replayEl.classList.add('hidden');
+    }
     previousMoveCount = -1;
     viewMoveCount(showZero = false, message = 'play more tomorrow') {
         const moves = this.state.moves;
@@ -127,6 +130,7 @@ export class UI {
     }
     async nextGame() {
         this.inert = true;
+        this.disableReplayButton();
         // make sure all tiles show as uncovered now
         this.cladding.uncoverAll();
         await delay(2000);
