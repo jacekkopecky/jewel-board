@@ -5,7 +5,7 @@
 // or show a static fractal tree and put the jewels on the nearest node
 // to its circle position?
 
-import { Jewel } from './jewels.js';
+import { Jewel } from '../jewels.js';
 
 interface JewelPlaced {
   jewel: Jewel;

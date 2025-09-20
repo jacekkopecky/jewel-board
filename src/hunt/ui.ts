@@ -1,7 +1,8 @@
-import { Cladding } from './cladding.js';
+import { Cladding } from '../cladding.js';
+import { Jewel } from '../jewels.js';
+import { delay, DelayFn, delayInterruptible, percent } from '../lib.js';
+
 import { Pos } from './jewel-board.js';
-import { Jewel } from './jewels.js';
-import { delay, DelayFn, delayInterruptible, percent } from './lib.js';
 import { BONUS_MOVES_PER_JEWEL, StateInterface } from './state.js';
 import { Tree } from './tree.js';
 

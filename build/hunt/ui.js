@@ -1,5 +1,5 @@
-import { Cladding } from './cladding.js';
-import { delay, delayInterruptible, percent } from './lib.js';
+import { Cladding } from '../cladding.js';
+import { delay, delayInterruptible, percent } from '../lib.js';
 import { BONUS_MOVES_PER_JEWEL } from './state.js';
 import { Tree } from './tree.js';
 const CLASS_UNCOVERED = 'uncovered';

@@ -1,5 +1,5 @@
+import { selectJewels } from '../jewels.js';
 import { Board } from './jewel-board.js';
-import { selectJewels } from './jewels.js';
 import { templates } from './templates.js';
 const LOCAL_STORAGE_KEY = 'jewel-board';
 const STARTING_MOVES = 12;

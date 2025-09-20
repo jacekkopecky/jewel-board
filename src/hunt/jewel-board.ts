@@ -1,4 +1,4 @@
-import { Jewel } from './jewels.js';
+import { Jewel } from '../jewels.js';
 
 export let tryPlacingCount = 0;
 
