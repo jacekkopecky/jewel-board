@@ -105,7 +105,7 @@ h1 {
   overflow: hidden;
 
   & .jewel {
-    --translate: unset;
+    --translate: translate(0, 0);
     box-sizing: border-box;
     transition: filter 0.5s ease-in, opacity 0.5s ease-in;
 
@@ -272,7 +272,7 @@ img.jewel {
 
   /* remove translation for jewel-merge */
   #jewels.merging & {
-    --translate: unset;
+    --translate: translate(0, 0);
 
     &:not(.justMoved) {
       transition: left 0.2s linear, top 0.2s ease-out;
