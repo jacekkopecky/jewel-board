@@ -27,6 +27,18 @@ h1 {
   color: var(--lightBg);
   filter: brightness(1.6);
   flex: 0 1;
+  align-self: stretch;
+  text-align: center;
+
+  .otherGame {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    color: var(--lightBg);
+    font-weight: normal;
+    font-size: 80%;
+    line-height: 125%;
+  }
 }
 
 #tree {
