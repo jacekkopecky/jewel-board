@@ -17,7 +17,7 @@ export class UI {
   private inert = false;
 
   private tree = new Tree();
-  private cladding = new Cladding((x, y) => !this.inert && this.uncoverTile(x, y));
+  private cladding = new Cladding({ onClick: (x, y) => !this.inert && this.uncoverTile(x, y) });
 
   constructor(private state: StateInterface) {
     if (

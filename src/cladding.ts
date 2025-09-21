@@ -2,9 +2,11 @@ import { delay } from './lib.js';
 
 const CLASS_UNCOVERED = 'uncovered';
 
-type DropHandler = (x: number, y: number) => void;
+type MouseHandler = (x: number, y: number) => void;
+
 interface CladdingOptions {
-  onDrop?: DropHandler;
+  onClick: MouseHandler;
+  onDrop?: MouseHandler;
 }
 
 export class Cladding {
@@ -12,23 +14,18 @@ export class Cladding {
   private readonly claddingEl = document.querySelector<HTMLElement>('#cladding')!;
 
   private claddingTiles: HTMLElement[] = [];
-  private readonly onDrop?: DropHandler;
+  private readonly onClick: MouseHandler;
+  private readonly onDrop?: MouseHandler | undefined;
 
   private size = 0;
 
-  // todo move onClick to CladdingOptions
-  constructor(
-    private readonly onClick?: (x: number, y: number) => void,
-    opts: CladdingOptions = {}
-  ) {
+  constructor(opts: CladdingOptions) {
     if (this.canvasBoxEl == null || this.claddingEl == null) {
       throw new Error('cannot find expected HTML elements');
     }
 
-    const { onDrop } = opts;
-    if (onDrop) {
-      this.onDrop = onDrop;
-    }
+    this.onClick = opts.onClick;
+    this.onDrop = opts.onDrop;
   }
 
   regenerate() {
@@ -55,7 +52,7 @@ export class Cladding {
 
         tileEl.addEventListener(
           'click',
-          () => !tileEl.classList.contains(CLASS_UNCOVERED) && this.onClick?.(x, y)
+          () => !tileEl.classList.contains(CLASS_UNCOVERED) && this.onClick(x, y)
         );
 
         if (this.onDrop) {

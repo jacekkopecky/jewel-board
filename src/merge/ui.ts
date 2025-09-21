@@ -13,7 +13,8 @@ export class UI {
 
   private draggingJewel: JewelPlaced | null = null;
 
-  private cladding = new Cladding((x, y) => this.addJewel(x, y), {
+  private cladding = new Cladding({
+    onClick: (x, y) => this.addJewel(x, y),
     onDrop: (x, y) => this.dropDraggingJewel(x, y),
   });
 

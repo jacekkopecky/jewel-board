@@ -11,7 +11,7 @@ export class UI {
     replayEl = document.querySelector('#replay');
     inert = false;
     tree = new Tree();
-    cladding = new Cladding((x, y) => !this.inert && this.uncoverTile(x, y));
+    cladding = new Cladding({ onClick: (x, y) => !this.inert && this.uncoverTile(x, y) });
     constructor(state) {
         this.state = state;
         if (this.jewelsEl == null ||

@@ -1,22 +1,18 @@
 import { delay } from './lib.js';
 const CLASS_UNCOVERED = 'uncovered';
 export class Cladding {
-    onClick;
     canvasBoxEl = document.querySelector('#canvasBox');
     claddingEl = document.querySelector('#cladding');
     claddingTiles = [];
+    onClick;
     onDrop;
     size = 0;
-    // todo move onClick to CladdingOptions
-    constructor(onClick, opts = {}) {
-        this.onClick = onClick;
+    constructor(opts) {
         if (this.canvasBoxEl == null || this.claddingEl == null) {
             throw new Error('cannot find expected HTML elements');
         }
-        const { onDrop } = opts;
-        if (onDrop) {
-            this.onDrop = onDrop;
-        }
+        this.onClick = opts.onClick;
+        this.onDrop = opts.onDrop;
     }
     regenerate() {
         this.generate(this.size);
@@ -36,7 +32,7 @@ export class Cladding {
         for (let y = 0; y < size; y += 1) {
             for (let x = 0; x < size; x += 1) {
                 const tileEl = document.createElement('div');
-                tileEl.addEventListener('click', () => !tileEl.classList.contains(CLASS_UNCOVERED) && this.onClick?.(x, y));
+                tileEl.addEventListener('click', () => !tileEl.classList.contains(CLASS_UNCOVERED) && this.onClick(x, y));
                 if (this.onDrop) {
                     tileEl.addEventListener('drop', () => this.onDrop?.(x, y));
                 }

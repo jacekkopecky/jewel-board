@@ -8,7 +8,8 @@ export class UI {
     movesCountEl = document.querySelector('#movesCount');
     moveBonusFloatEl = document.querySelector('#moveBonusFloat');
     draggingJewel = null;
-    cladding = new Cladding((x, y) => this.addJewel(x, y), {
+    cladding = new Cladding({
+        onClick: (x, y) => this.addJewel(x, y),
         onDrop: (x, y) => this.dropDraggingJewel(x, y),
     });
     constructor(state) {
