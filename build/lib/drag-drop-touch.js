@@ -112,9 +112,7 @@ class DragDropTouch {
      * @param e
      */
     _touchstart(e) {
-        DEBUG: console.log(`touchstart`);
         if (this._shouldHandle(e)) {
-            DEBUG: console.log(`handling touch start, resetting state`);
             this._reset();
             let src = this._closestDraggable(e.target);
             if (src) {
@@ -127,7 +125,6 @@ class DragDropTouch {
                     this._ptDown = pointFrom(e);
                     this._lastTouch = e;
                     // show context menu if the user hasn't started dragging after a while
-                    DEBUG: console.log(`setting a contextmenu timeout`);
                     setTimeout(() => {
                         if (this._dragSource === src && this._img === null) {
                             if (this._dispatchEvent(e, `contextmenu`, src)) {
@@ -136,9 +133,7 @@ class DragDropTouch {
                         }
                     }, this.configuration.contextMenuDelayMS);
                     if (this.configuration.isPressHoldMode) {
-                        DEBUG: console.log(`setting a press-hold timeout for ${this.configuration.pressHoldDelayMS}ms`);
                         this._pressHoldIntervalId = setTimeout(() => {
-                            DEBUG: console.log(`this._isDragEnabled = true, calling touchMove`);
                             this._isDragEnabled = true;
                             this._touchmove(e);
                         }, this.configuration.pressHoldDelayMS);
@@ -148,7 +143,6 @@ class DragDropTouch {
                     // been turned into click events by the browser.
                     else if (!e.isTrusted) {
                         if (e.target !== this._lastTarget) {
-                            DEBUG: console.log(`synthetic touch start: saving _lastTarget`);
                             this._lastTarget = e.target;
                         }
                     }
@@ -162,27 +156,21 @@ class DragDropTouch {
      * @returns
      */
     _touchmove(e) {
-        DEBUG: console.log(`touchmove`);
         if (this._shouldCancelPressHoldMove(e)) {
-            DEBUG: console.log(`cancel press-hold move`);
             this._reset();
             return;
         }
         if (this._shouldHandleMove(e) || this._shouldHandlePressHoldMove(e)) {
-            DEBUG: console.log(`handling touch move`);
             // see if target wants to handle move
             let target = this._getTarget(e);
             if (this._dispatchEvent(e, `mousemove`, target)) {
-                DEBUG: console.log(`target handled mousemove, returning early.`);
                 this._lastTouch = e;
                 e.preventDefault();
                 return;
             }
             // start dragging
             if (this._dragSource && !this._img && this._shouldStartDragging(e)) {
-                DEBUG: console.log(`should start dragging`);
                 if (this._dispatchEvent(this._lastTouch, `dragstart`, this._dragSource)) {
-                    DEBUG: console.log(`target canceled drag event, returning early.`);
                     this._dragSource = null;
                     return;
                 }
@@ -191,7 +179,6 @@ class DragDropTouch {
             }
             // continue dragging
             if (this._img && this._dragSource) {
-                DEBUG: console.log(`continue dragging`);
                 this._lastTouch = e;
                 e.preventDefault();
                 this._dispatchEvent(e, `drag`, this._dragSource);
@@ -205,7 +192,6 @@ class DragDropTouch {
                 this._isDropZone = this._dispatchEvent(e, `dragover`, target);
                 // Allow scrolling if the screen edges were marked as "hot regions".
                 if (this.configuration.allowDragScroll) {
-                    DEBUG: console.log(`synthetic scroll allowed`);
                     const delta = this._getHotRegionDelta(e);
                     globalThis.scrollBy(delta.x, delta.y);
                 }
@@ -218,31 +204,24 @@ class DragDropTouch {
      * @returns
      */
     _touchend(e) {
-        DEBUG: console.log(`touchend`);
         if (!(this._lastTouch && e.target && this._lastTarget)) {
-            DEBUG: console.log(`no lastTouch for touchend, resetting state.`);
             this._reset();
             return;
         }
         if (this._shouldHandle(e)) {
-            DEBUG: console.log(`handling touch end`);
             if (this._dispatchEvent(this._lastTouch, `mouseup`, e.target)) {
-                DEBUG: console.log(`target handled mouseup, returning early.`);
                 e.preventDefault();
                 return;
             }
             // user clicked the element but didn't drag, so clear the source and simulate a click
             if (!this._img) {
-                DEBUG: console.log(`click rather than drag.`);
                 this._dragSource = null;
                 this._dispatchEvent(this._lastTouch, `click`, e.target);
             }
             // finish dragging
             this._destroyImage();
             if (this._dragSource) {
-                DEBUG: console.log(`handling drop.`);
                 if (e.type.indexOf(`cancel`) < 0 && this._isDropZone) {
-                    DEBUG: console.log(`drop was canceled.`);
                     this._dispatchEvent(this._lastTouch, `drop`, this._lastTarget);
                 }
                 this._dispatchEvent(this._lastTouch, `dragend`, this._dragSource);
@@ -284,14 +263,6 @@ class DragDropTouch {
      * @returns
      */
     _shouldCancelPressHoldMove(e) {
-        DEBUG: {
-            console.log({
-                isPressHoldMode: this.configuration.isPressHoldMode,
-                _isDragEnabled: this._isDragEnabled,
-                delta: this._getDelta(e),
-                pressHoldMargin: this.configuration.pressHoldMargin,
-            });
-        }
         return (this.configuration.isPressHoldMode &&
             !this._isDragEnabled &&
             this._getDelta(e) > this.configuration.pressHoldMargin);
@@ -304,7 +275,6 @@ class DragDropTouch {
     _shouldStartDragging(e) {
         let delta = this._getDelta(e);
         if (this.configuration.isPressHoldMode) {
-            DEBUG: console.log(this.configuration.isPressHoldMode, delta, this.configuration.pressHoldThresholdPixels);
             return delta >= this.configuration.pressHoldThresholdPixels;
         }
         return delta > this.configuration.dragThresholdPixels;
