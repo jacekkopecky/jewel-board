@@ -50,6 +50,9 @@ export class UI {
                 img.addEventListener('drop', () => this.dropDraggingJewel(position[0], position[1]));
                 this.jewelsEl.append(img);
                 jewel.el = img;
+                // make it appear gradually
+                img.classList.add('appearing');
+                setTimeout(() => img.classList.remove('appearing'), 0);
             }
             else {
                 // update the image style - it may have moved
@@ -58,9 +61,10 @@ export class UI {
             }
             // todo on merging higher levels, maybe just add bonus moves (copy fn from orig state.ts) but also N times try to click nearby fields
         }
-        // remove jewels now removed
         for (const oldJewel of oldJewels) {
-            oldJewel.remove();
+            // gradually remove jewels now removed
+            oldJewel.classList.add('disappearing');
+            setTimeout(() => oldJewel.remove(), 1000);
         }
         // todo change this to true if we're adding bonus moves
         this.viewMoveCount(false);
