@@ -6,9 +6,7 @@ you get one uncover per day
 
 ## todo
 
-- [ ] add a sub-game like princess clothing, getting pearls, two pearls are a ring, two rings are a
-      tiara etc.
-  - basically a clone in a subdirectory, with shared jewels?
+- [ ] bonus moves or other mergables in merging game
 - [ ] try using white lines in the jewels, maybe add a sparkle
 - [ ] at the end of replay, show all jewels on the board again?
 - [ ] make more jewels, use this for inspiration: https://c7.alamy.com/comp/2BP2WMA/2BP2WMA.jpg
@@ -24,6 +22,12 @@ you get one uncover per day
   - or select as many diverse ones as possible
 
 ---
+
+## done 2025-09-21
+
+- [x] add a sub-game like princess clothing, getting pearls, two pearls are a ring, two rings are a
+      tiara etc.
+  - basically a clone in a subdirectory, with shared jewels?
 
 ## done 2025-02-23
 
