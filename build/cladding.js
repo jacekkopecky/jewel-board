@@ -5,11 +5,17 @@ export class Cladding {
     canvasBoxEl = document.querySelector('#canvasBox');
     claddingEl = document.querySelector('#cladding');
     claddingTiles = [];
+    onDrop;
     size = 0;
-    constructor(onClick) {
+    // todo move onClick to CladdingOptions
+    constructor(onClick, opts = {}) {
         this.onClick = onClick;
         if (this.canvasBoxEl == null || this.claddingEl == null) {
             throw new Error('cannot find expected HTML elements');
+        }
+        const { onDrop } = opts;
+        if (onDrop) {
+            this.onDrop = onDrop;
         }
     }
     regenerate() {
@@ -20,10 +26,20 @@ export class Cladding {
         this.canvasBoxEl.style.setProperty('--size', String(size));
         this.claddingEl.textContent = '';
         this.claddingTiles.length = 0;
+        if (this.onDrop) {
+            this.claddingEl.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                if (e.dataTransfer)
+                    e.dataTransfer.dropEffect = 'move';
+            });
+        }
         for (let y = 0; y < size; y += 1) {
             for (let x = 0; x < size; x += 1) {
                 const tileEl = document.createElement('div');
-                tileEl.addEventListener('click', () => !tileEl.classList.contains(CLASS_UNCOVERED) && this.onClick(x, y));
+                tileEl.addEventListener('click', () => !tileEl.classList.contains(CLASS_UNCOVERED) && this.onClick?.(x, y));
+                if (this.onDrop) {
+                    tileEl.addEventListener('drop', () => this.onDrop?.(x, y));
+                }
                 this.claddingEl.append(tileEl);
                 this.claddingTiles.push(tileEl);
             }

@@ -22,8 +22,18 @@ export function selectJewels(areaSizes) {
     return areaSizes.map((size) => {
         const jewelsOfSize = jewels.filter((j) => j.w * j.h === size);
         // clone it so we can set el and shadow el for it
-        return { ...selectRandom(jewelsOfSize) };
+        return clone(selectRandom(jewelsOfSize));
     });
+}
+export function isSame(j1, j2) {
+    return j1.w === j2.w && j1.h === j2.h && j1.svg === j2.svg;
+}
+function clone(j) {
+    return {
+        w: j.w,
+        h: j.h,
+        svg: j.svg,
+    };
 }
 export function preloadJewels() {
     for (const jewel of jewels) {
@@ -32,5 +42,23 @@ export function preloadJewels() {
         img.className = 'preload';
         document.body.append(img);
     }
+}
+export const mergeJewels = jewels.filter((j) => !j.upsideDown);
+export function selectMergeJewel(probabilities = [1]) {
+    const r = Math.random();
+    for (let i = 0; i < probabilities.length; i++) {
+        const p = probabilities[i];
+        if (r <= p) {
+            return clone(mergeJewels[i]);
+        }
+    }
+    throw new Error('probabilities should end with 1');
+}
+export function getMergedJewel(mergingJewel) {
+    const level = findJewelMergeLevel(mergingJewel);
+    return clone(mergeJewels[level + 1] || mergeJewels[0]);
+}
+export function findJewelMergeLevel(jewel) {
+    return mergeJewels.findIndex((j) => j.svg === jewel.svg);
 }
 //# sourceMappingURL=jewels.js.map

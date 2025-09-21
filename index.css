@@ -82,6 +82,28 @@ h1 {
   }
 }
 
+#pyramid {
+  width: 400px;
+  max-height: 400px;
+  margin: 1em;
+  flex: 1 1 100%;
+  position: relative;
+  border: solid 0.35em var(--darkBg);
+  border-radius: 0.75em;
+  overflow: hidden;
+
+  & .jewel {
+    --translate: unset;
+    box-sizing: border-box;
+    transition: filter 0.5s ease-in, opacity 0.5s ease-in;
+
+    &.shadow {
+      filter: grayscale(100%) contrast(0.05) drop-shadow(0px 0px 0.05px black);
+      opacity: 0.5;
+    }
+  }
+}
+
 #movesBox {
   position: relative;
   width: 400px;
@@ -235,6 +257,20 @@ img.jewel {
     --scale: scale(0);
     transition: transform 1s 1s;
   }
+
+  /* remove translation for jewel-merge */
+  #jewels.merging & {
+    --translate: unset;
+
+    &:not(.justMoved) {
+      transition: left 0.2s linear, top 0.2s ease-out;
+    }
+
+    /* hide the jewel on the board while it's being dragged */
+    &.dragging {
+      opacity: 0;
+    }
+  }
 }
 
 #cladding {
@@ -245,6 +281,11 @@ img.jewel {
   grid-template-rows: repeat(var(--size, 5), 1fr);
   border-radius: 0.5em;
   z-index: 1;
+
+  &.merging {
+    /* cladding is under the jewels in the merging game */
+    z-index: unset;
+  }
 
   & > div {
     background-color: var(--darkBg);

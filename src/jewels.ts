@@ -4,7 +4,7 @@ export interface Jewel {
   w: number;
   h: number;
   svg: string;
-  el?: Element;
+  el?: HTMLImageElement;
   treeEl?: Element;
   upsideDown?: boolean;
 }
@@ -33,8 +33,20 @@ export function selectJewels(areaSizes: number[]): Jewel[] {
   return areaSizes.map((size) => {
     const jewelsOfSize = jewels.filter((j) => j.w * j.h === size);
     // clone it so we can set el and shadow el for it
-    return { ...selectRandom(jewelsOfSize) };
+    return clone(selectRandom(jewelsOfSize));
   });
+}
+
+export function isSame(j1: Jewel, j2: Jewel): boolean {
+  return j1.w === j2.w && j1.h === j2.h && j1.svg === j2.svg;
+}
+
+function clone(j: Jewel): Jewel {
+  return {
+    w: j.w,
+    h: j.h,
+    svg: j.svg,
+  };
 }
 
 export function preloadJewels() {
@@ -44,4 +56,26 @@ export function preloadJewels() {
     img.className = 'preload';
     document.body.append(img);
   }
+}
+
+export const mergeJewels = jewels.filter((j) => !j.upsideDown);
+
+export function selectMergeJewel(probabilities: number[] = [1]): Jewel {
+  const r = Math.random();
+  for (let i = 0; i < probabilities.length; i++) {
+    const p = probabilities[i]!;
+    if (r <= p) {
+      return clone(mergeJewels[i]!);
+    }
+  }
+  throw new Error('probabilities should end with 1');
+}
+
+export function getMergedJewel(mergingJewel: Jewel): Jewel {
+  const level = findJewelMergeLevel(mergingJewel);
+  return clone(mergeJewels[level + 1] || mergeJewels[0]!);
+}
+
+export function findJewelMergeLevel(jewel: Jewel): number {
+  return mergeJewels.findIndex((j) => j.svg === jewel.svg);
 }

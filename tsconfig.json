@@ -10,5 +10,11 @@
     "moduleResolution": "nodenext",
     "sourceMap": true,
     "outDir": "build"
-  }
+  },
+  "exclude": [
+    "./lib"
+  ],
+  "include": [
+    "./src"
+  ]
 }

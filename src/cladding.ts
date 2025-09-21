@@ -2,17 +2,32 @@ import { delay } from './lib.js';
 
 const CLASS_UNCOVERED = 'uncovered';
 
+type DropHandler = (x: number, y: number) => void;
+interface CladdingOptions {
+  onDrop?: DropHandler;
+}
+
 export class Cladding {
   private readonly canvasBoxEl = document.querySelector<HTMLElement>('#canvasBox')!;
   private readonly claddingEl = document.querySelector<HTMLElement>('#cladding')!;
 
   private claddingTiles: HTMLElement[] = [];
+  private readonly onDrop?: DropHandler;
 
   private size = 0;
 
-  constructor(private readonly onClick: (x: number, y: number) => void) {
+  // todo move onClick to CladdingOptions
+  constructor(
+    private readonly onClick?: (x: number, y: number) => void,
+    opts: CladdingOptions = {}
+  ) {
     if (this.canvasBoxEl == null || this.claddingEl == null) {
       throw new Error('cannot find expected HTML elements');
+    }
+
+    const { onDrop } = opts;
+    if (onDrop) {
+      this.onDrop = onDrop;
     }
   }
 
@@ -27,14 +42,25 @@ export class Cladding {
     this.claddingEl.textContent = '';
     this.claddingTiles.length = 0;
 
+    if (this.onDrop) {
+      this.claddingEl.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+      });
+    }
+
     for (let y = 0; y < size; y += 1) {
       for (let x = 0; x < size; x += 1) {
         const tileEl = document.createElement('div');
 
         tileEl.addEventListener(
           'click',
-          () => !tileEl.classList.contains(CLASS_UNCOVERED) && this.onClick(x, y)
+          () => !tileEl.classList.contains(CLASS_UNCOVERED) && this.onClick?.(x, y)
         );
+
+        if (this.onDrop) {
+          tileEl.addEventListener('drop', () => this.onDrop?.(x, y));
+        }
 
         this.claddingEl.append(tileEl);
         this.claddingTiles.push(tileEl);
