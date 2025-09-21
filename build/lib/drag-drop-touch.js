@@ -205,6 +205,9 @@ class DragDropTouch {
      */
     _touchend(e) {
         if (!(this._lastTouch && e.target && this._lastTarget)) {
+            if (this._lastTouch && e.target) {
+                this._dispatchEvent(this._lastTouch, `dragend`, this._dragSource);
+            }
             this._reset();
             return;
         }
