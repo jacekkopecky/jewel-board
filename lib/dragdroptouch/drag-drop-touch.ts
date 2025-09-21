@@ -4,8 +4,8 @@ import {
   copyStyle,
   newForwardableEvent,
   pointFrom,
-} from "./drag-drop-touch-util";
-import { DragDTO } from "./drag-dto";
+} from "./drag-drop-touch-util.js";
+import { DragDTO } from "./drag-dto.js";
 
 const { round } = Math;
 

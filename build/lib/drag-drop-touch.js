@@ -1,6 +1,6 @@
 "use strict";
-import { copyStyle, newForwardableEvent, pointFrom, } from "./drag-drop-touch-util";
-import { DragDTO } from "./drag-dto";
+import { copyStyle, newForwardableEvent, pointFrom, } from "./drag-drop-touch-util.js";
+import { DragDTO } from "./drag-dto.js";
 const { round } = Math;
 const DefaultConfiguration = {
     allowDragScroll: true,
