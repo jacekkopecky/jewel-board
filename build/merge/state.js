@@ -1,10 +1,12 @@
 import { findJewelMergeLevel, getMergedJewel, isSame } from '../jewels.js';
 const LOCAL_STORAGE_KEY = 'jewel-board-merge';
 const STARTING_MOVES = 12;
-const MOVES_PER_DAY = 5;
+const MOVES_PER_HOUR = 1;
 export class State {
     _moves = STARTING_MOVES;
-    timeStarted = new Date().setHours(0, 0, 0, 0);
+    timeStarted = getCurrentHour();
+    hoursSeen = 0;
+    /** @deprecated we now use hoursSeen */
     daysSeen = 0;
     currentGame;
     get jewelsPlaced() {
@@ -44,10 +46,13 @@ export class State {
     }
     updateMoves() {
         const now = Date.now();
-        const daysSinceStart = Math.floor((now - this.timeStarted) / 1000 / 60 / 60 / 24);
-        if (daysSinceStart > this.daysSeen) {
-            this._moves += (daysSinceStart - this.daysSeen) * MOVES_PER_DAY;
-            this.daysSeen = daysSinceStart;
+        const hoursSinceStart = Math.floor((now - this.timeStarted) / 1000 / 60 / 60);
+        if (!this.hoursSeen && this.daysSeen) {
+            this.hoursSeen = this.daysSeen * 24;
+        }
+        if (hoursSinceStart > this.hoursSeen) {
+            this._moves += (hoursSinceStart - this.hoursSeen) * MOVES_PER_HOUR;
+            this.hoursSeen = hoursSinceStart;
             this.save();
         }
     }
@@ -119,5 +124,9 @@ export class State {
         this.recomputeHighestLevel();
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(this));
     }
+}
+function getCurrentHour() {
+    const currentDate = new Date();
+    return currentDate.setHours(currentDate.getHours(), 0, 0, 0);
 }
 //# sourceMappingURL=state.js.map

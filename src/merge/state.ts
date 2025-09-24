@@ -5,7 +5,7 @@ import { JewelPlaced, Pos } from './jewel-board.js';
 const LOCAL_STORAGE_KEY = 'jewel-board-merge';
 
 const STARTING_MOVES = 12;
-const MOVES_PER_DAY = 5;
+const MOVES_PER_HOUR = 1;
 
 interface Game {
   size: number;
@@ -26,7 +26,10 @@ export interface StateInterface {
 
 export class State {
   private _moves = STARTING_MOVES;
-  private timeStarted = new Date().setHours(0, 0, 0, 0);
+  private timeStarted = getCurrentHour();
+  private hoursSeen = 0;
+
+  /** @deprecated we now use hoursSeen */
   private daysSeen = 0;
 
   private currentGame?: Game;
@@ -68,10 +71,13 @@ export class State {
 
   updateMoves() {
     const now = Date.now();
-    const daysSinceStart = Math.floor((now - this.timeStarted) / 1000 / 60 / 60 / 24);
-    if (daysSinceStart > this.daysSeen) {
-      this._moves += (daysSinceStart - this.daysSeen) * MOVES_PER_DAY;
-      this.daysSeen = daysSinceStart;
+    const hoursSinceStart = Math.floor((now - this.timeStarted) / 1000 / 60 / 60);
+    if (!this.hoursSeen && this.daysSeen) {
+      this.hoursSeen = this.daysSeen * 24;
+    }
+    if (hoursSinceStart > this.hoursSeen) {
+      this._moves += (hoursSinceStart - this.hoursSeen) * MOVES_PER_HOUR;
+      this.hoursSeen = hoursSinceStart;
 
       this.save();
     }
@@ -160,4 +166,9 @@ export class State {
     this.recomputeHighestLevel();
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(this));
   }
+}
+
+function getCurrentHour() {
+  const currentDate = new Date();
+  return currentDate.setHours(currentDate.getHours(), 0, 0, 0);
 }
