@@ -70,7 +70,7 @@ export class State {
     const now = Date.now();
     const hoursSinceStart = Math.floor((now - this.timeStarted) / 1000 / 60 / 60);
     if (hoursSinceStart > this.hoursSeen) {
-      const movesToAdd = (hoursSinceStart - this.hoursSeen) % HOURS_PER_MOVE;
+      const movesToAdd = Math.floor((hoursSinceStart - this.hoursSeen) / HOURS_PER_MOVE);
       if (movesToAdd > 0) {
         this._moves += movesToAdd;
         this.hoursSeen += movesToAdd * HOURS_PER_MOVE;
