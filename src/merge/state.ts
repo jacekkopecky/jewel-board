@@ -5,7 +5,7 @@ import { JewelPlaced, Pos } from './jewel-board.js';
 const LOCAL_STORAGE_KEY = 'jewel-board-merge';
 
 const STARTING_MOVES = 12;
-const MOVES_PER_HOUR = 1;
+const HOURS_PER_MOVE = 4;
 
 interface Game {
   size: number;
@@ -28,9 +28,6 @@ export class State {
   private _moves = STARTING_MOVES;
   private timeStarted = getCurrentHour();
   private hoursSeen = 0;
-
-  /** @deprecated we now use hoursSeen */
-  private daysSeen = 0;
 
   private currentGame?: Game;
 
@@ -72,14 +69,14 @@ export class State {
   updateMoves() {
     const now = Date.now();
     const hoursSinceStart = Math.floor((now - this.timeStarted) / 1000 / 60 / 60);
-    if (!this.hoursSeen && this.daysSeen) {
-      this.hoursSeen = this.daysSeen * 24;
-    }
     if (hoursSinceStart > this.hoursSeen) {
-      this._moves += (hoursSinceStart - this.hoursSeen) * MOVES_PER_HOUR;
-      this.hoursSeen = hoursSinceStart;
+      const movesToAdd = (hoursSinceStart - this.hoursSeen) % HOURS_PER_MOVE;
+      if (movesToAdd > 0) {
+        this._moves += movesToAdd;
+        this.hoursSeen += movesToAdd * HOURS_PER_MOVE;
 
-      this.save();
+        this.save();
+      }
     }
   }
 

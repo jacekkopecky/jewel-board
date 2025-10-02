@@ -92,7 +92,7 @@ export class UI {
         }
     }
     previousMoveCount = -1;
-    viewMoveCount(showZero = false, message = 'add more in an hour') {
+    viewMoveCount(showZero = false, message = 'add more tomorrow') {
         const moves = this.state.moves;
         const showTomorrow = !moves && !showZero;
         this.movesCountEl.textContent = showTomorrow ? message : String(this.state.moves);
