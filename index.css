@@ -294,6 +294,10 @@ img.jewel {
     &.appearing {
       --scale: scale(0);
     }
+
+    &.newlyPlaced {
+      --translate: translate(0, -400%);
+    }
   }
 }
 

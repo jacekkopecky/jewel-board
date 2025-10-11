@@ -36,7 +36,7 @@ export class UI {
     return ui;
   }
 
-  private doShow() {
+  private doShow(opts: { newlyAddedJewel?: JewelPlaced } = {}) {
     const size = this.state.size;
 
     this.cladding.generate(size);
@@ -54,6 +54,9 @@ export class UI {
 
       if (!(jewel.el instanceof HTMLImageElement)) {
         const img = createJewelImg(jewel, [x, y], size * 3);
+        if (jewelPlaced === opts.newlyAddedJewel) {
+          img.classList.add('newlyPlaced');
+        }
         img.draggable = true;
         img.addEventListener('dragstart', () => this.startDragging(jewelPlaced));
         img.addEventListener('dragend', () => this.stopDragging(jewelPlaced));
@@ -67,7 +70,7 @@ export class UI {
 
         // make it appear gradually
         img.classList.add('appearing');
-        setTimeout(() => img.classList.remove('appearing'), 0);
+        setTimeout(() => img.classList.remove('appearing', 'newlyPlaced'), 0);
       } else {
         // update the image style - it may have moved
         createJewelImg(jewel, [x, y], size * 3, jewel.el);
@@ -140,8 +143,9 @@ export class UI {
     const highest = this.state.highestLevel;
     const probabilities =
       highest < 1 ? [1] : [4 / highest, 8 / highest, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1];
-    if (this.state.addJewel(x, y, selectMergeJewel(probabilities))) {
-      this.doShow();
+    const newlyAddedJewel = this.state.addJewel(x, y, selectMergeJewel(probabilities));
+    if (newlyAddedJewel) {
+      this.doShow({ newlyAddedJewel });
     }
   }
 

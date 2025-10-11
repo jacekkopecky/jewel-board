@@ -21,7 +21,7 @@ export interface StateInterface {
 
   updateMoves(): void;
   moveJewel(fromX: number, fromY: number, toX: number, toY: number): boolean;
-  addJewel(x: number, y: number, jewel: Jewel): boolean;
+  addJewel(x: number, y: number, jewel: Jewel): JewelPlaced | null;
 }
 
 export class State {
@@ -145,17 +145,18 @@ export class State {
     }
   }
 
-  addJewel(x: number, y: number, jewel: Jewel) {
+  addJewel(x: number, y: number, jewel: Jewel): JewelPlaced | null {
     if (
       this._moves > 0 &&
       !this.jewelsPlaced.find(({ position }) => position[0] == x && position[1] == y)
     ) {
-      this.currentGame!.jewelsPlaced.push({ jewel, position: [x, y] });
+      const newlyPlaced: JewelPlaced = { jewel, position: [x, y] };
+      this.currentGame!.jewelsPlaced.push(newlyPlaced);
       this._moves -= 1;
       this.save();
-      return true;
+      return newlyPlaced;
     } else {
-      return false;
+      return null;
     }
   }
 

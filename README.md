@@ -7,7 +7,6 @@ you get one uncover per day
 ## todo
 
 - [ ] bonus moves or other mergables in merging game
-- [ ] make newly placed jewels fly onto the board from moves or from a corner
 - [ ] place new jewels randomly when tapping on moves?
 - [ ] try using white lines in the jewels, maybe add a sparkle
 - [ ] at the end of replay, show all jewels on the board again?
@@ -24,6 +23,10 @@ you get one uncover per day
   - or select as many diverse ones as possible
 
 ---
+
+## done 2025-10-11
+
+- [x] make newly placed jewels fly onto the board from above
 
 ## done 2025-09-21
 
