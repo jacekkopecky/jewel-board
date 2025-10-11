@@ -27,6 +27,8 @@ export class UI {
     ) {
       throw new Error('cannot find expected HTML elements');
     }
+
+    this.movesCountEl.addEventListener('click', () => this.addRandomlyPlacedJewel());
   }
 
   static async show(state: StateInterface) {
@@ -147,6 +149,26 @@ export class UI {
     if (newlyAddedJewel) {
       this.doShow({ newlyAddedJewel });
     }
+  }
+
+  private addRandomlyPlacedJewel() {
+    const boardPositions: (Pos | undefined)[] = [];
+    const N = this.state.size;
+    for (let x = 0; x < N; x += 1) {
+      for (let y = 0; y < N; y += 1) {
+        boardPositions[y * N + x] = [x, y];
+      }
+    }
+
+    for (const { position } of this.state.jewelsPlaced) {
+      const [x, y] = position;
+      boardPositions[y * N + x] = undefined;
+    }
+
+    const available = boardPositions.filter((pos) => pos != null);
+    const random = Math.floor(Math.random() * available.length);
+    const pos = available[random];
+    if (pos) this.addJewel(pos[0], pos[1]);
   }
 
   private showPyramid() {
