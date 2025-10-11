@@ -296,7 +296,7 @@ img.jewel {
     }
 
     &.newlyPlaced {
-      --translate: translate(0, -400%);
+      --translate: translate(0, -200%);
     }
   }
 }

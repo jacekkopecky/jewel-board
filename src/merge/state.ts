@@ -20,8 +20,14 @@ export interface StateInterface {
   get highestLevel(): number;
 
   updateMoves(): void;
-  moveJewel(fromX: number, fromY: number, toX: number, toY: number): boolean;
+  moveJewel(
+    fromX: number,
+    fromY: number,
+    toX: number,
+    toY: number
+  ): { moved?: boolean; merged?: Jewel };
   addJewel(x: number, y: number, jewel: Jewel): JewelPlaced | null;
+  addBonusMoves(num: number): void;
 }
 
 export class State {
@@ -54,6 +60,13 @@ export class State {
       if (storedStr) {
         const data = JSON.parse(storedStr);
         Object.assign(retval, data);
+
+        // fix up jewel types which may be missing in the state
+        if (retval.currentGame) {
+          for (const jewelPlaced of retval.currentGame?.jewelsPlaced) {
+            jewelPlaced.jewel.type ??= 'jewel';
+          }
+        }
       }
     } catch (e) {
       console.warn('error loading state from', LOCAL_STORAGE_KEY);
@@ -80,6 +93,11 @@ export class State {
     }
   }
 
+  addBonusMoves(num: number) {
+    this._moves += num;
+    this.save();
+  }
+
   newGame() {
     this.currentGame = {
       size: 5,
@@ -98,54 +116,63 @@ export class State {
     this.currentGame.highestLevel = highest;
   }
 
-  moveJewel(fromX: number, fromY: number, toX: number, toY: number): boolean {
+  moveJewel(
+    fromX: number,
+    fromY: number,
+    toX: number,
+    toY: number
+  ): { moved?: boolean; merged?: Jewel } {
     if (!this.currentGame) throw new Error('state not initialized yet');
 
-    if (fromX === toX && fromY === toY) return false;
+    if (fromX === toX && fromY === toY) return {};
     if (fromX < 0 || fromX >= this.size || fromY < 0 || fromY >= this.size) {
       console.warn('moving out of bounds, why?', { fromX, fromY, toX, toY });
-      return false;
+      return {};
     }
 
-    const fromPlacement = this.currentGame.jewelsPlaced.find(
+    const fromJewel = this.currentGame.jewelsPlaced.find(
       (p) => p.position[0] === fromX && p.position[1] === fromY
     );
-    if (!fromPlacement) {
+    if (!fromJewel) {
       console.warn("moving a jewel that doesn't exist, why?", fromX, fromY);
-      return false;
+      return {};
     }
 
-    const toPlacement = this.currentGame.jewelsPlaced.find(
+    const toJewel = this.currentGame.jewelsPlaced.find(
       (p) => p.position[0] === toX && p.position[1] === toY
     );
 
-    if (!toPlacement) {
-      fromPlacement.position[0] = toX;
-      fromPlacement.position[1] = toY;
+    if (!toJewel) {
+      fromJewel.position[0] = toX;
+      fromJewel.position[1] = toY;
       this.save();
-      return true;
+      return { moved: true };
     }
 
-    if (isSame(fromPlacement.jewel, toPlacement.jewel)) {
-      this.currentGame.jewelsPlaced = this.currentGame.jewelsPlaced.filter(
-        (p) => p !== fromPlacement
-      );
-      toPlacement.jewel = getMergedJewel(fromPlacement.jewel);
+    if (isSame(fromJewel.jewel, toJewel.jewel)) {
+      this.currentGame.jewelsPlaced = this.currentGame.jewelsPlaced.filter((p) => p !== fromJewel);
+      const mergedJewel = getMergedJewel(fromJewel.jewel);
+      if (mergedJewel) {
+        toJewel.jewel = mergedJewel;
+      } else {
+        this.currentGame.jewelsPlaced = this.currentGame.jewelsPlaced.filter((p) => p !== toJewel);
+      }
       this.save();
-      return true;
+      return { moved: true, merged: fromJewel.jewel };
     } else {
       // swap places
-      const pos: Pos = [...fromPlacement.position];
-      fromPlacement.position[0] = toPlacement.position[0];
-      fromPlacement.position[1] = toPlacement.position[1];
-      toPlacement.position[0] = pos[0];
-      toPlacement.position[1] = pos[1];
+      const pos: Pos = [...fromJewel.position];
+      fromJewel.position[0] = toJewel.position[0];
+      fromJewel.position[1] = toJewel.position[1];
+      toJewel.position[0] = pos[0];
+      toJewel.position[1] = pos[1];
       this.save();
-      return true;
+      return { moved: true };
     }
   }
 
   addJewel(x: number, y: number, jewel: Jewel): JewelPlaced | null {
+    if (!jewel) return null;
     if (
       this._moves > 0 &&
       !this.jewelsPlaced.find(({ position }) => position[0] == x && position[1] == y)

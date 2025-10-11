@@ -1,5 +1,13 @@
 import { Cladding } from '../cladding.js';
-import { Jewel, mergeJewels, selectMergeJewel } from '../jewels.js';
+import {
+  clone,
+  coins,
+  findJewelMergeLevel,
+  isSame,
+  Jewel,
+  mergeJewels,
+  selectByProbability,
+} from '../jewels.js';
 import { percent } from '../lib.js';
 
 import { JewelPlaced, Pos } from './jewel-board.js';
@@ -78,8 +86,6 @@ export class UI {
         createJewelImg(jewel, [x, y], size * 3, jewel.el);
         oldJewels.delete(jewel.el);
       }
-
-      // todo on merging higher levels, maybe just add bonus moves (copy fn from orig state.ts) but also N times try to click nearby fields
     }
 
     for (const oldJewel of oldJewels) {
@@ -88,7 +94,6 @@ export class UI {
       setTimeout(() => oldJewel.remove(), 1000);
     }
 
-    // todo change this to true if we're adding bonus moves
     this.viewMoveCount(false);
   }
 
@@ -104,12 +109,27 @@ export class UI {
 
   private dropDraggingJewel(x: number, y: number) {
     if (this.draggingJewel) {
-      const moved = this.state.moveJewel(
+      const { moved, merged } = this.state.moveJewel(
         this.draggingJewel.position[0],
         this.draggingJewel.position[1],
         x,
         y
       );
+
+      if (merged) {
+        if (merged.type === 'jewel') {
+          // if it's a high jewel, add random coins
+          const bonusCoins = findJewelMergeLevel(merged) - 4;
+          if (bonusCoins > 0) this.addBonusCoins(bonusCoins);
+        } else if (merged.type === 'coin' && isSame(merged, coins.at(-1))) {
+          // if it's top coin, add bonus moves
+          const bonusMoves = 2 ** coins.length;
+          setTimeout(() => {
+            this.state.addBonusMoves(bonusMoves);
+            this.viewMoveCount();
+          }, 500);
+        }
+      }
 
       if (moved) {
         this.doShow();
@@ -145,13 +165,40 @@ export class UI {
     const highest = this.state.highestLevel;
     const probabilities =
       highest < 1 ? [1] : [4 / highest, 8 / highest, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1];
-    const newlyAddedJewel = this.state.addJewel(x, y, selectMergeJewel(probabilities));
+    const newlyAddedJewel = this.state.addJewel(
+      x,
+      y,
+      selectByProbability(mergeJewels, probabilities)
+    );
     if (newlyAddedJewel) {
       this.doShow({ newlyAddedJewel });
     }
   }
 
-  private addRandomlyPlacedJewel() {
+  private async addBonusCoins(bonusCoins: number) {
+    const availablePositions = this.getAvailablePositions();
+    while (bonusCoins > 0 && availablePositions.length > 0) {
+      const maxCoinLevel = Math.min(coins.length - 1, Math.log2(bonusCoins));
+      const nextCoinLevel = Math.floor(Math.random() * (maxCoinLevel + 1));
+      const nextRandomPositionIndex = Math.floor(Math.random() * availablePositions.length);
+      const pos = availablePositions[nextRandomPositionIndex]!;
+      availablePositions.splice(nextRandomPositionIndex, 1);
+
+      this.addCoin(pos[0], pos[1], nextCoinLevel);
+      bonusCoins -= 2 ** nextCoinLevel;
+
+      await new Promise((resolve) => setTimeout(resolve, 400));
+    }
+  }
+
+  private addCoin(x: number, y: number, level = 0) {
+    const newlyAddedCoin = this.state.addJewel(x, y, clone(coins[level]!));
+    if (newlyAddedCoin) {
+      this.doShow();
+    }
+  }
+
+  private getAvailablePositions() {
     const boardPositions: (Pos | undefined)[] = [];
     const N = this.state.size;
     for (let x = 0; x < N; x += 1) {
@@ -165,7 +212,11 @@ export class UI {
       boardPositions[y * N + x] = undefined;
     }
 
-    const available = boardPositions.filter((pos) => pos != null);
+    return boardPositions.filter((pos) => pos != null);
+  }
+
+  private addRandomlyPlacedJewel() {
+    const available = this.getAvailablePositions();
     const random = Math.floor(Math.random() * available.length);
     const pos = available[random];
     if (pos) this.addJewel(pos[0], pos[1]);
