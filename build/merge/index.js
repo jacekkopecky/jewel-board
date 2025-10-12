@@ -12,6 +12,10 @@ window.addEventListener('load', async () => {
         await delay(1000);
         if (document.visibilityState === 'visible') {
             state.updateMoves();
+            // add bonus moves on 2025-10-12 for testing
+            if (Date.now() < 1760310000000) {
+                state.addBonusMoves(8);
+            }
             ui.viewMoveCount();
         }
     }
