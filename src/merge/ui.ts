@@ -5,7 +5,6 @@ import {
   findJewelMergeLevel,
   isSame,
   Jewel,
-  log,
   mergeJewels,
   selectByProbability,
 } from '../jewels.js';
@@ -109,8 +108,6 @@ export class UI {
   }
 
   private dropDraggingJewel(x: number, y: number) {
-    log('------------------------------');
-    log('dropped', x, y);
     if (this.draggingJewel) {
       const { moved, merged } = this.state.moveJewel(
         this.draggingJewel.position[0],
@@ -119,14 +116,10 @@ export class UI {
         y
       );
 
-      log('moved', moved);
-
       if (merged) {
-        log('merged');
         if (merged.type === 'jewel') {
           // if it's a high jewel, add random coins
           const bonusCoins = findJewelMergeLevel(merged) - 4;
-          log('bonusCoins=', bonusCoins);
           if (bonusCoins > 0) this.addBonusCoins(bonusCoins);
         } else if (merged.type === 'coin' && isSame(merged, coins.at(-1))) {
           // if it's top coin, add bonus moves
@@ -184,21 +177,11 @@ export class UI {
 
   private async addBonusCoins(bonusCoins: number) {
     const availablePositions = this.getAvailablePositions();
-    log('availablePositions.length', availablePositions.length);
     while (bonusCoins > 0 && availablePositions.length > 0) {
       const maxCoinLevel = Math.min(coins.length - 1, Math.log2(bonusCoins));
       const nextCoinLevel = Math.floor(Math.random() * (maxCoinLevel + 1));
       const nextRandomPositionIndex = Math.floor(Math.random() * availablePositions.length);
       const pos = availablePositions[nextRandomPositionIndex]!;
-
-      log(
-        'bonusCoins, maxCoinLevel, nextCoinLevel, nextRandomPositionIndex',
-        bonusCoins,
-        maxCoinLevel,
-        nextCoinLevel,
-        nextRandomPositionIndex
-      );
-      log('pos', pos);
       availablePositions.splice(nextRandomPositionIndex, 1);
 
       this.addCoin(pos[0], pos[1], nextCoinLevel);

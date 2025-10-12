@@ -1,5 +1,5 @@
 import { Cladding } from '../cladding.js';
-import { clone, coins, findJewelMergeLevel, isSame, log, mergeJewels, selectByProbability, } from '../jewels.js';
+import { clone, coins, findJewelMergeLevel, isSame, mergeJewels, selectByProbability, } from '../jewels.js';
 import { percent } from '../lib.js';
 export class UI {
     state;
@@ -80,17 +80,12 @@ export class UI {
         this.draggingJewel = null;
     }
     dropDraggingJewel(x, y) {
-        log('------------------------------');
-        log('dropped', x, y);
         if (this.draggingJewel) {
             const { moved, merged } = this.state.moveJewel(this.draggingJewel.position[0], this.draggingJewel.position[1], x, y);
-            log('moved', moved);
             if (merged) {
-                log('merged');
                 if (merged.type === 'jewel') {
                     // if it's a high jewel, add random coins
                     const bonusCoins = findJewelMergeLevel(merged) - 4;
-                    log('bonusCoins=', bonusCoins);
                     if (bonusCoins > 0)
                         this.addBonusCoins(bonusCoins);
                 }
@@ -139,14 +134,11 @@ export class UI {
     }
     async addBonusCoins(bonusCoins) {
         const availablePositions = this.getAvailablePositions();
-        log('availablePositions.length', availablePositions.length);
         while (bonusCoins > 0 && availablePositions.length > 0) {
             const maxCoinLevel = Math.min(coins.length - 1, Math.log2(bonusCoins));
             const nextCoinLevel = Math.floor(Math.random() * (maxCoinLevel + 1));
             const nextRandomPositionIndex = Math.floor(Math.random() * availablePositions.length);
             const pos = availablePositions[nextRandomPositionIndex];
-            log('bonusCoins, maxCoinLevel, nextCoinLevel, nextRandomPositionIndex', bonusCoins, maxCoinLevel, nextCoinLevel, nextRandomPositionIndex);
-            log('pos', pos);
             availablePositions.splice(nextRandomPositionIndex, 1);
             this.addCoin(pos[0], pos[1], nextCoinLevel);
             bonusCoins -= 2 ** nextCoinLevel;

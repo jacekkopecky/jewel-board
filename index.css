@@ -345,9 +345,3 @@ img.jewel {
   position: absolute;
   opacity: 0;
 }
-
-#log {
-  white-space: pre-line;
-  background-color: #fffc;
-  padding: 0.5em;
-}
