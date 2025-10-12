@@ -80,4 +80,10 @@ export function getMergedJewel(mergingJewel) {
 export function findJewelMergeLevel(jewel) {
     return mergeJewels.findIndex((j) => isSame(j, jewel));
 }
+export function log(...args) {
+    const el = document.querySelector('#log');
+    if (el) {
+        el.textContent += args.join(' ') + '\n';
+    }
+}
 //# sourceMappingURL=jewels.js.map

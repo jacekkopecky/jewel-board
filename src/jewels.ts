@@ -105,3 +105,10 @@ export function getMergedJewel(mergingJewel: Jewel): Jewel | undefined {
 export function findJewelMergeLevel(jewel: Jewel): number {
   return mergeJewels.findIndex((j) => isSame(j, jewel));
 }
+
+export function log(...args: unknown[]) {
+  const el = document.querySelector('#log');
+  if (el) {
+    el.textContent += args.join(' ') + '\n';
+  }
+}
