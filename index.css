@@ -105,7 +105,7 @@ h1 {
   overflow: hidden;
 
   & .jewel {
-    --translate: translate(0, 0);
+    --translating: translate(0, 0);
     box-sizing: border-box;
     transition: filter 0.5s ease-in, opacity 0.5s ease-in;
 
@@ -244,6 +244,36 @@ h1 {
   }
 }
 
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@property --scale {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 100%;
+}
+
+@keyframes pulsate {
+  from {
+    --scale: 100%;
+  }
+  60% {
+    --scale: 97%;
+  }
+  80% {
+    --scale: 102%;
+  }
+  to {
+    --scale: 100%;
+  }
+}
+
 #canvasBox {
   display: block;
   width: 400px;
@@ -256,23 +286,23 @@ h1 {
 }
 
 img.jewel {
-  --scale: scale(90%);
-  --translate: translate(-50%, -50%);
+  --scaling: scale(90%);
+  --translating: translate(-50%, -50%);
   position: absolute;
-  transform: var(--translate) var(--scale);
+  transform: var(--translating) var(--scaling);
 
   &.flip {
-    transform: var(--translate) var(--scale) rotate(90deg);
+    transform: var(--translating) var(--scaling) rotate(90deg);
   }
 
   &.uncovered {
-    --scale: scale(0);
+    --scaling: scale(0);
     transition: transform 1s 1s;
   }
 
   /* remove translation for jewel-merge */
   #jewels.merging & {
-    --translate: translate(0, 0);
+    --translating: translate(0, 0);
 
     &:not(.justMoved) {
       transition: transform 0.5s, left 0.2s linear, top 0.2s ease-out;
@@ -284,7 +314,7 @@ img.jewel {
     }
 
     &.disappearing {
-      --scale: scale(0);
+      --scaling: scale(0);
       z-index: 1;
       &:not(.justMoved) {
         transition: transform 0.3s ease-in;
@@ -292,11 +322,34 @@ img.jewel {
     }
 
     &.appearing {
-      --scale: scale(0);
+      --scaling: scale(0);
     }
 
     &.newlyPlaced {
-      --translate: translate(0, -200%);
+      --translating: translate(0, -200%);
+    }
+
+    &.dragover:not(.dragging) {
+      anchor-name: --dragover-jewel;
+
+      #jewels.merging:has(&)::after {
+        z-index: 10;
+        content: ' ';
+        position: absolute;
+        position-anchor: --dragover-jewel;
+        top: anchor(center);
+        left: anchor(center);
+        width: 4.8em;
+        height: 4.8em;
+        border-radius: 100%;
+        border: solid 0.4em #ff7;
+        --scale: 100%;
+        transform: translate(-50%, -50%) scale(var(--scale));
+        pointer-events: none;
+        filter: blur(0.1em);
+        animation: appear 0.2s ease-out both, pulsate 0.5s ease-in-out infinite;
+        transition: --size ease-in-out;
+      }
     }
   }
 }

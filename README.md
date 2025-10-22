@@ -22,6 +22,10 @@ you get one uncover per day
 
 ---
 
+## done 2025-10-22
+
+- [x] on dragging in merge, highlight the jewel to merge with
+
 ## done 2025-10-11
 
 - [x] make newly placed jewels fly onto the board from above

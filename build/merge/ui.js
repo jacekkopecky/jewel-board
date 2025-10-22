@@ -51,7 +51,18 @@ export class UI {
                     if (e.dataTransfer)
                         e.dataTransfer.dropEffect = 'move';
                 });
-                img.addEventListener('drop', () => this.dropDraggingJewel(position[0], position[1]));
+                img.addEventListener('dragenter', () => {
+                    img.classList.add('dragover');
+                });
+                img.addEventListener('dragleave', () => {
+                    img.classList.remove('dragover');
+                });
+                img.addEventListener('drop', () => {
+                    for (const el of document.querySelectorAll('.dragover')) {
+                        el.classList.remove('dragover');
+                    }
+                    this.dropDraggingJewel(position[0], position[1]);
+                });
                 this.jewelsEl.append(img);
                 jewel.el = img;
                 // make it appear gradually
