@@ -172,10 +172,10 @@ export class UI {
   }
 
   private addJewel(x: number, y: number) {
-    // make more of higher jewels (only three smallest jewels though) the bigger jewels you have
+    // make more of higher jewels the bigger jewels you have
     const highest = this.state.highestLevel;
     const probabilities =
-      highest < 1 ? [1] : [4 / highest, 8 / highest, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1];
+      highest < 1 ? [1] : [3 / highest, 6 / highest, 9 / highest, 12 / highest, 1];
     const newlyAddedJewel = this.state.addJewel(
       x,
       y,

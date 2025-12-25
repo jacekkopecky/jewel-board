@@ -5,7 +5,7 @@ import { JewelPlaced, Pos } from './jewel-board.js';
 const LOCAL_STORAGE_KEY = 'jewel-board-merge';
 
 const STARTING_MOVES = 12;
-const HOURS_PER_MOVE = 3;
+const HOURS_PER_MOVE = 2;
 
 interface Game {
   size: number;

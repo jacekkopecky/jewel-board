@@ -58,7 +58,7 @@ export function preloadJewels() {
 }
 export function selectByProbability(arr, probabilities = [1]) {
     if (arr.length < probabilities.length) {
-        throw new Error('there must be at least as many probabilities as jewels');
+        throw new Error('there must be at least as many jewels as probabilities');
     }
     const r = Math.random();
     for (let i = 0; i < probabilities.length; i++) {
