@@ -1,6 +1,6 @@
 import { findJewelMergeLevel, getMergedJewel, isSame } from '../jewels.js';
 const LOCAL_STORAGE_KEY = 'jewel-board-merge';
-const STARTING_MOVES = 12;
+const STARTING_MOVES = 8;
 const HOURS_PER_MOVE = 2;
 export class State {
     _moves = STARTING_MOVES;

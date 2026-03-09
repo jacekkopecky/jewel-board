@@ -4,7 +4,7 @@ import { JewelPlaced, Pos } from './jewel-board.js';
 
 const LOCAL_STORAGE_KEY = 'jewel-board-merge';
 
-const STARTING_MOVES = 12;
+const STARTING_MOVES = 8;
 const HOURS_PER_MOVE = 2;
 
 interface Game {
@@ -24,7 +24,7 @@ export interface StateInterface {
     fromX: number,
     fromY: number,
     toX: number,
-    toY: number
+    toY: number,
   ): { moved?: boolean; merged?: Jewel };
   addJewel(x: number, y: number, jewel: Jewel): JewelPlaced | null;
   addBonusMoves(num: number): void;
@@ -111,7 +111,7 @@ export class State {
   private recomputeHighestLevel() {
     if (!this.currentGame) throw new Error('state not initialized yet');
     const highest = Math.max(
-      ...this.currentGame.jewelsPlaced.map((j) => findJewelMergeLevel(j.jewel))
+      ...this.currentGame.jewelsPlaced.map((j) => findJewelMergeLevel(j.jewel)),
     );
     this.currentGame.highestLevel = highest;
   }
@@ -120,7 +120,7 @@ export class State {
     fromX: number,
     fromY: number,
     toX: number,
-    toY: number
+    toY: number,
   ): { moved?: boolean; merged?: Jewel } {
     if (!this.currentGame) throw new Error('state not initialized yet');
 
@@ -131,7 +131,7 @@ export class State {
     }
 
     const fromJewel = this.currentGame.jewelsPlaced.find(
-      (p) => p.position[0] === fromX && p.position[1] === fromY
+      (p) => p.position[0] === fromX && p.position[1] === fromY,
     );
     if (!fromJewel) {
       console.warn("moving a jewel that doesn't exist, why?", fromX, fromY);
@@ -139,7 +139,7 @@ export class State {
     }
 
     const toJewel = this.currentGame.jewelsPlaced.find(
-      (p) => p.position[0] === toX && p.position[1] === toY
+      (p) => p.position[0] === toX && p.position[1] === toY,
     );
 
     if (!toJewel) {
