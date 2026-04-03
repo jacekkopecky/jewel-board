@@ -157,7 +157,7 @@ export class UI {
         }
     }
     addCoin(x, y, level = 0) {
-        const newlyAddedCoin = this.state.addJewel(x, y, clone(coins[level]));
+        const newlyAddedCoin = this.state.addJewel(x, y, clone(coins[level]), true);
         if (newlyAddedCoin) {
             this.doShow();
         }

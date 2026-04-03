@@ -124,7 +124,7 @@ export class UI {
         this.draggingJewel.position[0],
         this.draggingJewel.position[1],
         x,
-        y
+        y,
       );
 
       if (merged) {
@@ -179,7 +179,7 @@ export class UI {
     const newlyAddedJewel = this.state.addJewel(
       x,
       y,
-      selectByProbability(mergeJewels, probabilities)
+      selectByProbability(mergeJewels, probabilities),
     );
     if (newlyAddedJewel) {
       this.doShow({ newlyAddedJewel });
@@ -203,7 +203,7 @@ export class UI {
   }
 
   private addCoin(x: number, y: number, level = 0) {
-    const newlyAddedCoin = this.state.addJewel(x, y, clone(coins[level]!));
+    const newlyAddedCoin = this.state.addJewel(x, y, clone(coins[level]!), true);
     if (newlyAddedCoin) {
       this.doShow();
     }

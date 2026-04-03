@@ -6,6 +6,9 @@ you get one uncover per day
 
 ## todo
 
+- [ ] add maximum energy limits?
+  - 20 for finding?
+  - 2 days for merge?
 - [ ] try using white lines in the jewels, maybe add a sparkle
 - [ ] at the end of replay, show all jewels on the board again?
 - [ ] make more jewels, use this for inspiration: https://c7.alamy.com/comp/2BP2WMA/2BP2WMA.jpg
@@ -20,7 +23,20 @@ you get one uncover per day
 - [ ] select one type of jewel from a bag of the same size so the shape is unambiguous
   - or select as many diverse ones as possible
 
+## deployment process
+
+- make a change
+- update readme
+- npm run build
+- commit, push
+
 ---
+
+## done by 2026-04-03
+
+- [x] apparent bug: sometimes I don't get coins - there might be something in my state that prevents
+      finding the current level?
+  - it was because of wrongly charging moves for the coins, out of moves meant no coins
 
 ## done 2025-10-22
 

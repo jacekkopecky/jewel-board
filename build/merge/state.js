@@ -122,14 +122,15 @@ export class State {
             return { moved: true };
         }
     }
-    addJewel(x, y, jewel) {
+    addJewel(x, y, jewel, freeMove) {
         if (!jewel)
             return null;
-        if (this._moves > 0 &&
+        if ((freeMove || this._moves > 0) &&
             !this.jewelsPlaced.find(({ position }) => position[0] == x && position[1] == y)) {
             const newlyPlaced = { jewel, position: [x, y] };
             this.currentGame.jewelsPlaced.push(newlyPlaced);
-            this._moves -= 1;
+            if (!freeMove)
+                this._moves -= 1;
             this.save();
             return newlyPlaced;
         }

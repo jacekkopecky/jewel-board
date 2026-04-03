@@ -26,7 +26,7 @@ export interface StateInterface {
     toX: number,
     toY: number,
   ): { moved?: boolean; merged?: Jewel };
-  addJewel(x: number, y: number, jewel: Jewel): JewelPlaced | null;
+  addJewel(x: number, y: number, jewel: Jewel, freeMove?: boolean): JewelPlaced | null;
   addBonusMoves(num: number): void;
 }
 
@@ -171,15 +171,15 @@ export class State {
     }
   }
 
-  addJewel(x: number, y: number, jewel: Jewel): JewelPlaced | null {
+  addJewel(x: number, y: number, jewel: Jewel, freeMove?: boolean): JewelPlaced | null {
     if (!jewel) return null;
     if (
-      this._moves > 0 &&
+      (freeMove || this._moves > 0) &&
       !this.jewelsPlaced.find(({ position }) => position[0] == x && position[1] == y)
     ) {
       const newlyPlaced: JewelPlaced = { jewel, position: [x, y] };
       this.currentGame!.jewelsPlaced.push(newlyPlaced);
-      this._moves -= 1;
+      if (!freeMove) this._moves -= 1;
       this.save();
       return newlyPlaced;
     } else {
